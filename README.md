@@ -1,2 +1,2 @@
 # MVR
-Mini Vulkan Renderer
+Metal-Vulkan Renderer
