@@ -1,6 +1,4 @@
-#ifndef __MVR_LOG_H__
-#define __MVR_LOG_H__
+#include "system/MVRLog.h"
 
 
 
-#endif
