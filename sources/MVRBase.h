@@ -64,15 +64,15 @@ typedef unsigned long uint64;
 
 #if defined(MVR_ENGINE)
 	#ifdef _WIN32
-		#define MVR_ENGINE_API __declspec(dllexport)
+		#define MVR_API __declspec(dllexport)
 	#else
-		#define MVR_ENGINE_API __attribute__(( __visibility__("default") ))
+		#define MVR_API __attribute__(( __visibility__("default") ))
 	#endif
 #else
 	#ifdef _WIN32
-		#define MVR_ENGINE_API __declspec(dllimport)
+		#define MVR_API __declspec(dllimport)
 	#else
-		#define MVR_ENGINE_API 
+		#define MVR_API
 	#endif
 #endif
 

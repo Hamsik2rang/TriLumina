@@ -5,7 +5,7 @@
 
 MVR_NS_ENGINE_BEGIN
 
-class MVR_ENGINE_API MVREngine
+class MVR_API MVREngine
 {
 public:
 	void Print(const char* msg);
