@@ -1,5 +1,6 @@
 #include "MVRBase.h"
 #include "system/MVRLog.h"
+#include <cstdio>
 
 #include <cstdio>
 #include <cstdarg>
