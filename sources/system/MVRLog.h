@@ -3,6 +3,8 @@
 
 #include "MVRBase.h"
 
+#include <cstdarg>
+
 MVR_NS_BEGIN
 
 class MVRLog
@@ -44,7 +46,8 @@ MVR_NS_END
 #else
 	#define MVR_ASSERT(b, fmt, ...) 
 	#define MVR_NEVER_HAPPEN() 
-#endif 
+    #define MVR_CHECK(x, msg)
+#endif
 
 #endif
 

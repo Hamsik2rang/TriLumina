@@ -7,6 +7,21 @@
 	#error MVR is only support Windows and Mac!
 #endif
 
+// TODO: 맥에서 DEBUG Define 확인!
+#ifdef _WIN32
+    #if defined(_DEBUG)
+        #define MVR_DEBUG
+    #else
+        #define MVR_RELEASE
+    #endif
+#else
+    #if defined (DEBUG)
+        #define MVR_DEBUG
+    #else
+        #define MVR_RELEASE
+    #endif
+#endif
+
 typedef char int8;
 typedef unsigned char uint8;
 typedef short int16;

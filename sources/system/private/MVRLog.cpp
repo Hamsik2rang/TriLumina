@@ -23,13 +23,16 @@ static const char* log_color_cyan = LOG_COLOR_CYAN;
 static const char* log_color_white = LOG_COLOR_WHITE;
 static const char* log_color_magenta = LOG_COLOR_MAGENTA;
 static const char* log_color_reset = LOG_COLOR_RESET;
+
 #else
-static const char* log_color_red = "";
-static const char* log_color_green = "";
-static const char* log_color_yellow = "";
-static const char* log_color_cyan = "";
-static const char* log_color_white = "";
-static const char* log_color_reset;
+static const char* log_color_red = "🔴";
+static const char* log_color_green = "🟢";
+static const char* log_color_yellow = "🟡";
+static const char* log_color_cyan = "🔵";
+static const char* log_color_white = "⚪️";
+static const char* log_color_magenta = "🟣";
+static const char* log_color_reset = "";
+
 #endif
 
 static const char* log_tag_info = "[INFO]";
@@ -41,6 +44,7 @@ static const char* log_tag_crash = "[CRASH]";
 static const char* log_tag_assert = "[ASSERT]";
 static const char* log_tag_invalid = "[??????]";
 
+
 void MVRLog::Log(const char* file, const uint32 line, const LogType type, const char* fmt, ...)
 {
 	const char* start = nullptr;
@@ -49,7 +53,7 @@ void MVRLog::Log(const char* file, const uint32 line, const LogType type, const 
 	FILE* stream = nullptr;
 	switch (type)
 	{
-	case LogType::LOG_INFO:
+    case LogType::LOG_INFO:
 	{
 		start = log_color_white;
 		tag = log_tag_info;
