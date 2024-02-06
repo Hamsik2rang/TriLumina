@@ -4,6 +4,8 @@
 #include "MVRBase.h"
 
 #include "engine/MVREngine.h"
+#include "system/MVRLog.h"
+
 MVR_NS_EDITOR_BEGIN
 
 using namespace MVR;

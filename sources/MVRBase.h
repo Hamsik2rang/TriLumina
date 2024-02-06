@@ -1,5 +1,5 @@
-#ifndef __MVR_PRECOMPILE__
-#define __MVR_PRECOMPILE__
+#ifndef __MVR_BASE__
+#define __MVR_BASE__
 
 #include <cassert>
 
@@ -34,9 +34,9 @@ typedef unsigned long uint64;
 #define BIT(x)          BIT_UINT32(x)
 
 #if defined(_WIN32)
-	#define HS_DEBUG_BREAK __debugbreak()
+	#define MVR_DEBUG_BREAK() __debugbreak()
 #elif defined(__APPLE__)
-	#define HS_DEBUG_BREAK __builtin_trap()
+	#define MVR_DEBUG_BREAK() __builtin_trap()
 #endif
 
 #ifdef _DEBUG
@@ -47,19 +47,6 @@ typedef unsigned long uint64;
 	#ifdef MVR_ASSERTION_ENABLED
 		#undef MVR_ASSERTION_ENABLED
 	#endif
-#endif
-
-#ifdef MVR_ASSERTION_ENABLED
-	// TODO: Implement after create Log System.
-	#define MVR_ASSERT(x, ...)
-	#define MVR_ASSERT_WITHOUT_MESSAGE(x)
-	#define MVR_ASSERT_WITH_ERROR_CODE(x)
-	#define MVR_NEVER_HAPPEN				assert(0)
-#else
-	#define HS_ASSERT(x, ...) 
-	#define HS_ASSERT_WITHOUT_MESSAGE(x) 
-	#define HS_ASSERT_WITH_ERROR_CODE(x)
-	#define HS_NEVER_HAPPEN
 #endif
 
 #if defined(MVR_ENGINE)
