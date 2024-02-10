@@ -50,7 +50,7 @@ void MVRLog::Log(const char* file, const uint32 line, const LogType type, const 
 	const char* start = nullptr;
 	const char* end = log_color_reset;
 	const char* tag = nullptr;
-	FILE* stream = nullptr;
+
 	switch (type)
 	{
     case LogType::LOG_INFO:

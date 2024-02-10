@@ -3,11 +3,22 @@ set(TARGET_NAME system)
 project(${TARGET_NAME})
 
 set(HEADERS
+    event/MVREvent.h
+    event/MVRKeyEvent.h
+    event/MVRMouseEvent.h
+    event/MVRApplicationEvent.h
     MVRLog.h
 )
 
 set(SOURCES
     private/MVRLog.cpp
+)
+
+source_group("Header Files\\Event" FILES
+    event/MVREvent.h
+    event/MVRKeyEvent.h
+    event/MVRMouseEvent.h
+    event/MVRApplicationEvent.h
 )
 
 add_library(${TARGET_NAME}
