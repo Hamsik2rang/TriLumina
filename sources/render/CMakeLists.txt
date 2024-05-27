@@ -21,7 +21,7 @@ target_link_libraries(${TARGET_NAME}
     system
 )
 
-target_include_directories(${TARGET_NAME} PRIVATE private)
+# target_include_directories(${TARGET_NAME} PRIVATE private)
 
 # Define project properties
 if(WIN32)

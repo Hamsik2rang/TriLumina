@@ -7,19 +7,32 @@
 	#error MVR is only support Windows and Mac!
 #endif
 
-// TODO: 맥에서 DEBUG Define 확인!
+#if defined(__i386__) || defined(_M_IX86)
+	#define MVR_PROCESSOR_X86_32
+#endif
+
+#if defined(__x86_64__) || defined(__ia64__) || defined(_M_X64)
+	#define MVR_PROCESSOR_X86_64
+#endif
+
+#if defined(__arm__) || defined(__arm64__) || defined(_M_ARM) || defined(__aarch64__)
+	#if !defined(__LINUX__) && !defined(__arm64__) && !defined(__aarch64__)
+		#define MVR_PROCESSOR_ARM32
+	#else
+		#define MVR_PROCESSOR_ARM64
+	#endif
+#endif
+
 #ifdef _WIN32
-    #if defined(_DEBUG)
-        #define MVR_DEBUG
-    #else
-        #define MVR_RELEASE
-    #endif
+	#define MVR_PLATFORM_WINDOWS
 #else
-    #if defined (DEBUG)
-        #define MVR_DEBUG
-    #else
-        #define MVR_RELEASE
-    #endif
+	#define MVR_PLATFORM_MACOS
+#endif
+
+#if defined(_DEBUG) || defined(DEBUG)
+	#define MVR_PROFILE_DEBUG
+#else
+	#define MVR_PROFILE_RELEASE
 #endif
 
 typedef char int8;
@@ -28,14 +41,13 @@ typedef short int16;
 typedef unsigned short uint16;
 typedef int int32;
 typedef unsigned int uint32;
-#ifdef _WIN32
+#ifdef MVR_PLATFORM_WINDOWS
 typedef long long int64;
 typedef unsigned long long uint64;
-#else
+#else // MVR_PLATFORM_MACOS
 typedef long int64;
 typedef unsigned long uint64;
 #endif
-
 
 #define BIT_INT8(x)     (static_cast<int8>(1) << (x))
 #define BIT_UINT8(x)    (static_cast<uint8>(1u) << (x))
@@ -44,14 +56,14 @@ typedef unsigned long uint64;
 #define BIT_INT32(x)    (static_cast<int32>(1) << (x))
 #define BIT_UINT32(x)   (static_cast<uint32>(1u) << (x))
 #define BIT_INT64(x)    (static_cast<int64>(1) << (x))
-#define BIT_UINT64(x)   (static_cast<uint64(1u) << (x))
+#define BIT_UINT64(x)   (static_cast<uint64>(1u) << (x))
 
 #define BIT(x)          BIT_UINT32(x)
 
 #if defined(_WIN32)
-	#define MVR_DEBUG_BREAK() __debugbreak()
+	#define MVR_DEBUG_BREAK __debugbreak
 #elif defined(__APPLE__)
-	#define MVR_DEBUG_BREAK() __builtin_trap()
+	#define MVR_DEBUG_BREAK __builtin_trap
 #endif
 
 #ifdef _DEBUG
@@ -65,13 +77,13 @@ typedef unsigned long uint64;
 #endif
 
 #if defined(MVR_ENGINE)
-	#ifdef _WIN32
+	#ifdef MVR_PLATFORM_WINDOWS
 		#define MVR_API __declspec(dllexport)
 	#else
 		#define MVR_API __attribute__(( __visibility__("default") ))
 	#endif
 #else
-	#ifdef _WIN32
+	#ifdef MVR_PLATFORM_WINDOWS
 		#define MVR_API __declspec(dllimport)
 	#else
 		#define MVR_API
@@ -79,16 +91,16 @@ typedef unsigned long uint64;
 #endif
 
 #if defined(MVR_EDITOR)
-	#ifdef _WIN32
+	#ifdef MVR_PLATFORM_WINDOWS
 		#define MVR_EDITOR_API __declspec(dllexport)
 	#else
 		#define MVR_EDITOR_API __attribute__(( __visibility__("default") ))
 	#endif
 #else
-	#ifdef _WIN32
+	#ifdef MVR_PLATFORM_WINDOWS
 		#define MVR_EDITOR_API __declspec(dllimport)
 	#else
-		#define MVR_EDITOR_API 
+		#define MVR_EDITOR_API
 	#endif
 #endif
 

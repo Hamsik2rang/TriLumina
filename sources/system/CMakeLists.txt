@@ -2,23 +2,69 @@ set(TARGET_NAME system)
 
 project(${TARGET_NAME})
 
-set(HEADERS
-    event/MVREvent.h
-    event/MVRKeyEvent.h
-    event/MVRMouseEvent.h
-    event/MVRApplicationEvent.h
-    MVRLog.h
+set(EVENT_HEADERS
+    event/MVREvent.hpp
+    event/MVRKeyEvent.hpp
+    event/MVRMouseEvent.hpp
+    event/MVRApplicationEvent.hpp
 )
+
+source_group("event\\public" FILES ${EVENT_HEADERS})
+
+IF(APPLE)
+    set(PLATFORM_HEADERS
+        platform/cocoa/MVRWindowCocoa.h
+        platform/cocoa/MVRPlatformCocoa.h
+    )
+ELSEIF(MSVC)
+    set(PLATFORM_HEADERS
+        platform/windows/MVRWindowWindows.h
+        platform/windows/MVRPlatformWindows.h
+    )
+ENDIF()
+
+source_group("platform\\public" FILES ${PLATFORM_HEADERS})
+
+set(COMMON_HEADERS
+    MVRLog.h
+    MVRSystemContext.h
+    MVRWindow.h
+)
+
+source_group("public" FILES ${COMMON_HEADERS})
+
+set(HEADERS
+    ${EVENT_HEADERS}
+    ${PLATFORM_HEADERS}
+    ${COMMON_HEADERS}
+)
+
+set(EVENT_SOURCES)
+source_group("event\\private" FILES ${EVENT_SOURCES})
+
+IF(APPLE)
+    set(PLATFORM_SOURCES
+        private/platform/cocoa/MVRPlatformCocoa.mm
+    )
+ELSEIF(MSVC)
+    set(PLATFORM_SOURCES
+        private/platform/windows/MVRPlatformWindows.cpp
+    )
+ENDIF()
+
+source_group("platform\\private" FILES ${PLATFORM_SOURCES})
+
+set(COMMON_SOURCES
+    private/MVRLog.cpp
+    private/MVRSystemContext.cpp
+)
+
+source_group("private" FILES ${COMMON_SOURCES})
 
 set(SOURCES
-    private/MVRLog.cpp
-)
-
-source_group("Header Files\\Event" FILES
-    event/MVREvent.h
-    event/MVRKeyEvent.h
-    event/MVRMouseEvent.h
-    event/MVRApplicationEvent.h
+    ${EVENT_SOURCES}
+    ${PLATFORM_SOURCES}
+    ${COMMON_SOURCES}
 )
 
 add_library(${TARGET_NAME}
@@ -27,7 +73,7 @@ add_library(${TARGET_NAME}
     ${SOURCES}
 )
 
-target_include_directories(${TARGET_NAME} PRIVATE private)
+# target_include_directories(${TARGET_NAME} PRIVATE private)
 
 # Define project properties
 if(WIN32)
