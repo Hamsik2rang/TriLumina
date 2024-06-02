@@ -15,6 +15,7 @@ IF(APPLE)
     set(PLATFORM_HEADERS
         platform/cocoa/MVRWindowCocoa.h
         platform/cocoa/MVRPlatformCocoa.h
+        platform/cocoa/MVRAutoreleasePool.h
     )
 ELSEIF(MSVC)
     set(PLATFORM_HEADERS
@@ -45,6 +46,7 @@ source_group("event\\private" FILES ${EVENT_SOURCES})
 IF(APPLE)
     set(PLATFORM_SOURCES
         private/platform/cocoa/MVRPlatformCocoa.mm
+        private/platform/cocoa/MVRAutoreleasePool.mm
     )
 ELSEIF(MSVC)
     set(PLATFORM_SOURCES

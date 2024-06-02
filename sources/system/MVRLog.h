@@ -35,13 +35,13 @@ MVR_NS_END
 #define MVR_LOG_TRACE(fmt, ...)		do { MVR::MVRLog::Log(__FILE__, __LINE__, MVR::MVRLog::LogType::LOG_TRACE, fmt, ##__VA_ARGS__); } while(0)
 #define MVR_LOG_WARNING(fmt, ...)	do { MVR::MVRLog::Log(__FILE__, __LINE__, MVR::MVRLog::LogType::LOG_WARNING, fmt, ##__VA_ARGS__); } while(0)
 #define MVR_LOG_ERROR(fmt, ...)		do { MVR::MVRLog::Log(__FILE__, __LINE__, MVR::MVRLog::LogType::LOG_ERROR, fmt, ##__VA_ARGS__); } while(0)
-#define MVR_LOG_CRASH(fmt, ...)		do { MVR::MVRLog::Log(__FILE__, __LINE__, MVR::MVRLog::LogType::LOG_CRASH, fmt, ##__VA_ARGS__); abort(); } while(0)
+#define MVR_LOG_CRASH(fmt, ...)		do { MVR::MVRLog::Log(__FILE__, __LINE__, MVR::MVRLog::LogType::LOG_CRASH, fmt, ##__VA_ARGS__); MVR_DEBUG_BREAK(); } while(0)
 
 #ifdef MVR_ASSERTION_ENABLED
-#define MVR_LOG_ASSERT(fmt, ...)		    do { MVR::MVRLog::Log(__FILE__, __LINE__, MVR::MVRLog::LogType::LOG_ASSERT, fmt, ##__VA_ARGS__); } while(0)
-#define MVR_ASSERT(x, fmt, ...)			    do { const volatile bool b = (x); if (!b) { MVR_LOG_ASSERT(fmt, ##__VA_ARGS__); abort(); } } while(0)
-#define MVR_NEVER_HAPPEN()				assert(0)
-#define MVR_CHECK(x, msg) do { const volatile bool b = (x); if (!b) { MVR_DEBUG_BREAK(); } } while(0)
+#define MVR_LOG_ASSERT(fmt, ...)    do { MVR::MVRLog::Log(__FILE__, __LINE__, MVR::MVRLog::LogType::LOG_ASSERT, fmt, ##__VA_ARGS__); } while(0)
+#define MVR_ASSERT(x, fmt, ...)	    do { const volatile bool b = (x); if (!b) { MVR_LOG_ASSERT(fmt, ##__VA_ARGS__); MVR_DEBUG_BREAK(); } } while(0)
+#define MVR_NEVER_HAPPEN()		    assert(0)
+#define MVR_CHECK(x, fmt, ...)      do { const volatile bool b = (x); if (!b) { MVR_LOG_CRASH(fmt, ##__VA_ARGS__); } } while(0)
 #else
 #define MVR_ASSERT(b, fmt, ...)
 #define MVR_NEVER_HAPPEN()

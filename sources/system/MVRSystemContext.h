@@ -12,7 +12,6 @@
 MVR_NS_BEGIN
 
 class MVRWindow;
-class MVRGraphics;
 
 class MVRSystemContext
 {
