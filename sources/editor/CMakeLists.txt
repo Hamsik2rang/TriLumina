@@ -23,8 +23,12 @@ target_link_libraries(${TARGET_NAME}
     engine
 )
 
-# target_include_directories(${TARGET_NAME} PRIVATE private)
-
+target_compile_definitions(${TARGET_NAME} PUBLIC
+    $<$<CONFIG:Debug>:_DEBUG>
+    $<$<CONFIG:MinSizeRel>:_RELEASE>
+    $<$<CONFIG:Release>:_RELEASE>
+    $<$<CONFIG:RelWithDebInfo>:_RELWITHDEBINFO>
+)
 # Define project properties
 if(WIN32)
     set_property(TARGET ${TARGET_NAME} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../../)

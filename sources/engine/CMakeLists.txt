@@ -23,7 +23,12 @@ target_link_libraries(${TARGET_NAME}
     render
 )
 
-# target_include_directories(${TARGET_NAME} PRIVATE private)
+target_compile_definitions(${TARGET_NAME} PUBLIC
+    $<$<CONFIG:Debug>:_DEBUG>
+    $<$<CONFIG:MinSizeRel>:_RELEASE>
+    $<$<CONFIG:Release>:_RELEASE>
+    $<$<CONFIG:RelWithDebInfo>:_RELWITHDEBINFO>
+)
 
 # Define project properties
 if(WIN32)

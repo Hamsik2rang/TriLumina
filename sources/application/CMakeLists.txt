@@ -14,7 +14,18 @@ target_link_libraries(${TARGET_NAME}
     PUBLIC
     editor
 )
-target_include_directories(${TARGET_NAME} PRIVATE private)
+
+target_compile_definitions(${TARGET_NAME} PUBLIC
+    $<$<CONFIG:Debug>:_DEBUG>
+    $<$<CONFIG:MinSizeRel>:_RELEASE>
+    $<$<CONFIG:Release>:_RELEASE>
+    $<$<CONFIG:RelWithDebInfo>:_RELWITHDEBINFO>
+)
+
+if(APPLE)
+    SET(CMAKE_XCODE_GENERATE_SCHEME TRUE)
+    SET_PROPERTY(TARGET application PROPERTY XCODE_SCHEME_ARGUMENTS "")
+endif()
 
 # Define project properties
 if(WIN32)

@@ -13,7 +13,7 @@ int main()
     MVR_LOG_TRACE("This is %s.", "trace");
     MVR_LOG_WARNING("This is %s.", "warning");
     MVR_LOG_ERROR("This is %s.", "error");
-    //MVR_LOG_CRASH("This is %s.", "crash");
+//    MVR_LOG_CRASH("This is %s.", "crash");
 
     MVR_CHECK(false, "this is check");
 
