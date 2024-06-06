@@ -1,2 +1,2 @@
-# MVR
-Metal-Vulkan Renderer
+# TriLumina
+Cross-platform renderer. support Vulkan, Metal, and DirectX11/12
