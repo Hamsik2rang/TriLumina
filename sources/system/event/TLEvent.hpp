@@ -1,16 +1,16 @@
-#ifndef __MVR_EVENT__
-#define __MVR_EVENT__
+#ifndef __TL_EVENT__
+#define __TL_EVENT__
 
-#include "MVRBase.h"
+#include "TLBase.h"
 
-#include "system/MVRLog.h"
+#include "system/TLLog.h"
 
 #include <functional>
 #include <string>
 
-MVR_NS_BEGIN
+TL_NS_BEGIN
 
-enum class MVREventType : uint8
+enum class TLEventType : uint8
 {
     NONE = 0,
     
@@ -33,7 +33,7 @@ enum class MVREventType : uint8
     APP_RENDER,
 };
 
-enum class MVREventCategory
+enum class TLEventCategory
 {
     NONE            = 0,
     APPLICATION     = BIT(0),
@@ -43,35 +43,35 @@ enum class MVREventCategory
     MOUSE_BUTTON    = BIT(4),
 };
 
-#define EVENT_CLASS_TYPE(type) static MVREventType GetStaticType() { return MVREventType::##type; } \
-                                virtual MVREventType GetEventType() const override { return GetStaticType(); } \
+#define EVENT_CLASS_TYPE(type) static TLEventType GetStaticType() { return TLEventType::##type; } \
+                                virtual TLEventType GetEventType() const override { return GetStaticType(); } \
                                 virtual const char* GetName() const override { return #type; }
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
-class MVREvent
+class TLEvent
 {
-    friend class MVREventDispatcher;
+    friend class TLEventDispatcher;
 public:
-    virtual MVREventType GetEventType() const = 0;
+    virtual TLEventType GetEventType() const = 0;
     virtual const char* GetName() const = 0;
     virtual int GetCategoryFlags() const = 0;
     virtual std::string ToString() const { return std::string(GetName()); }
     
     inline bool IsHandled() const { return _isHandled; }
-    inline bool IsCategory(const MVREventCategory& category) const { return GetCategoryFlags() & category; }
+    inline bool IsCategory(const TLEventCategory& category) const { return GetCategoryFlags() & category; }
     
 protected:
     bool _isHandled;
 };
 
-class MVREventDispatcher
+class TLEventDispatcher
 {
     template <typename T>
     using EventFunc = std::function<bool(T&)>;
     
 public:
-    MVREventDispatcher(Event& event) 
+    TLEventDispatcher(TLEvent& event) 
         : _event{event}
     {}
     
@@ -89,9 +89,9 @@ public:
     }
     
 private:
-    MVREvent& _event;
+    TLEvent& _event;
 };
 
-MVR_NS_END
+TL_NS_END
 
 #endif

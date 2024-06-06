@@ -1,19 +1,23 @@
-set(TARGET_NAME render)
+set(TARGET_NAME graphics)
 
 project(${TARGET_NAME})
 
-set(HEADERS
-    MVRRender.h
+set(COMMON_HEADERS
+    TLGraphicsContext.h
 )
 
-set(SOURCES
-    private/MVRRender.cpp
+source_group("public" FILES ${COMMON_HEADERS})
+
+set(COMMON_SOURCES
+    private/TLGraphicsContext.cpp
 )
+
+source_group("private" FILES ${COMMON_SOURCES})
 
 add_library(${TARGET_NAME}
     STATIC
-    ${HEADERS}
-    ${SOURCES}
+    ${COMMON_HEADERS}
+    ${COMMON_SOURCES}
 )
 
 target_link_libraries(${TARGET_NAME}

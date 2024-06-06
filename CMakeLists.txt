@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19.2)
 
-set(ENGINE_NAME "MVR")
+set(ENGINE_NAME "TriLumina")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

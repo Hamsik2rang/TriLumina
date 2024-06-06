@@ -3,33 +3,33 @@ set(TARGET_NAME system)
 project(${TARGET_NAME})
 
 set(EVENT_HEADERS
-    event/MVREvent.hpp
-    event/MVRKeyEvent.hpp
-    event/MVRMouseEvent.hpp
-    event/MVRApplicationEvent.hpp
+    event/TLEvent.hpp
+    event/TLKeyEvent.hpp
+    event/TLMouseEvent.hpp
+    event/TLApplicationEvent.hpp
 )
 
 source_group("event\\public" FILES ${EVENT_HEADERS})
 
 IF(APPLE)
     set(PLATFORM_HEADERS
-        platform/cocoa/MVRWindowCocoa.h
-        platform/cocoa/MVRPlatformCocoa.h
-        platform/cocoa/MVRAutoreleasePool.h
+        platform/cocoa/TLWindowCocoa.h
+        platform/cocoa/TLPlatformCocoa.h
+        platform/cocoa/TLAutoreleasePool.h
     )
 ELSEIF(MSVC)
     set(PLATFORM_HEADERS
-        platform/windows/MVRWindowWindows.h
-        platform/windows/MVRPlatformWindows.h
+        platform/windows/TLWindowWindows.h
+        platform/windows/TLPlatformWindows.h
     )
 ENDIF()
 
 source_group("platform\\public" FILES ${PLATFORM_HEADERS})
 
 set(COMMON_HEADERS
-    MVRLog.h
-    MVRSystemContext.h
-    MVRWindow.h
+    TLLog.h
+    TLSystemContext.h
+    TLWindow.h
 )
 
 source_group("public" FILES ${COMMON_HEADERS})
@@ -45,20 +45,20 @@ source_group("event\\private" FILES ${EVENT_SOURCES})
 
 IF(APPLE)
     set(PLATFORM_SOURCES
-        private/platform/cocoa/MVRPlatformCocoa.mm
-        private/platform/cocoa/MVRAutoreleasePool.mm
+        private/platform/cocoa/TLPlatformCocoa.mm
+        private/platform/cocoa/TLAutoreleasePool.mm
     )
 ELSEIF(MSVC)
     set(PLATFORM_SOURCES
-        private/platform/windows/MVRPlatformWindows.cpp
+        private/platform/windows/TLPlatformWindows.cpp
     )
 ENDIF()
 
 source_group("platform\\private" FILES ${PLATFORM_SOURCES})
 
 set(COMMON_SOURCES
-    private/MVRLog.cpp
-    private/MVRSystemContext.cpp
+    private/TLLog.cpp
+    private/TLSystemContext.cpp
 )
 
 source_group("private" FILES ${COMMON_SOURCES})

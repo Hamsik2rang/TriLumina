@@ -1,11 +1,11 @@
-#include "MVRBase.h"
-#include "system/MVRLog.h"
+#include "TLBase.h"
+#include "system/TLLog.h"
 #include <cstdio>
 
 #include <cstdio>
 #include <cstdarg>
 
-MVR_NS_BEGIN
+TL_NS_BEGIN
 
 #define LOG_COLOR_RED		"\033[31m"
 #define LOG_COLOR_GREEN		"\033[32m"
@@ -45,7 +45,7 @@ static const char* log_tag_assert = "[ASSERT]";
 static const char* log_tag_invalid = "[??????]";
 
 
-void MVRLog::Log(const char* file, const uint32 line, const LogType type, const char* fmt, ...)
+void TLLog::Log(const char* file, const uint32 line, const LogType type, const char* fmt, ...)
 {
 	const char* start = nullptr;
 	const char* end = log_color_reset;
@@ -110,11 +110,11 @@ void MVRLog::Log(const char* file, const uint32 line, const LogType type, const 
 	va_end(ptr);
 }
 
-void MVRLog::print(const char* file, const uint32 line, const char* start, const char* tag, const char* end, const char* fmt, va_list ptr)
+void TLLog::print(const char* file, const uint32 line, const char* start, const char* tag, const char* end, const char* fmt, va_list ptr)
 {
 	fprintf(stdout, "%s%s ", start, tag);
 	vfprintf(stdout, fmt, ptr);
 	fprintf(stdout, " (%s:%u)%s\n", file, line, end);
 }
 
-MVR_NS_END
+TL_NS_END

@@ -2,12 +2,20 @@ set(TARGET_NAME application)
 
 project(${TARGET_NAME})
 
-set(SOURCES
-    private/MVRMain.cpp
+set(COMMON_HEADERS
+    TLMain.h)
+
+source_group("public" FILES ${COMMON_HEADDERS})
+
+set(COMMON_SOURCES
+    private/TLMain.cpp
 )
 
+source_group("private" FILES ${COMMON_SOURCES})
+
 add_executable(${TARGET_NAME}
-    ${SOURCES}
+    ${COMMON_HEADERS}
+    ${COMMON_SOURCES}
 )
 
 target_link_libraries(${TARGET_NAME}

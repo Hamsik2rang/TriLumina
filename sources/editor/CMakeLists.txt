@@ -1,21 +1,25 @@
 set(TARGET_NAME editor)
 
-add_compile_definitions(MVR_EDITOR)
+add_compile_definitions(TL_EDITOR)
 
 project(${TARGET_NAME})
 
-set(HEADERS
-    MVREditor.h
+set(COMMON_HEADERS
+    TLEditor.h
 )
 
-set(SOURCES
-    private/MVREditor.cpp
+source_group("public" FILES ${COMMON_HEADERS})
+
+set(COMMON_SOURCES
+    private/TLEditor.cpp
 )
+
+source_group("private" FILES ${COMMON_SOURCES})
 
 add_library(${TARGET_NAME}
     SHARED
-    ${HEADERS}
-    ${SOURCES}
+    ${COMMON_HEADERS}
+    ${COMMON_SOURCES}
 )
 
 target_link_libraries(${TARGET_NAME}
@@ -29,6 +33,7 @@ target_compile_definitions(${TARGET_NAME} PUBLIC
     $<$<CONFIG:Release>:_RELEASE>
     $<$<CONFIG:RelWithDebInfo>:_RELWITHDEBINFO>
 )
+
 # Define project properties
 if(WIN32)
     set_property(TARGET ${TARGET_NAME} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../../)

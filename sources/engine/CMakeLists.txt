@@ -2,25 +2,30 @@ set(TARGET_NAME engine)
 
 project(${TARGET_NAME})
 
-add_compile_definitions(MVR_ENGINE)
+add_compile_definitions(TL_ENGINE)
 
-set(HEADERS
-    MVREngine.h
+set(COMMON_HEADERS
+    TLEngine.h
 )
 
-set(SOURCES
-    private/MVREngine.cpp
+source_group("public" FILES ${COMMON_HEADERS})
+
+set(COMMON_SOURCES
+    private/TLEngine.cpp
 )
+
+source_group("private" FILES ${COMMON_SOURCES})
 
 add_library(${TARGET_NAME}
     SHARED
-    ${HEADERS}
-    ${SOURCES}
+    ${COMMON_HEADERS}
+    ${COMMON_SOURCES}
 )
 
 target_link_libraries(${TARGET_NAME}
     PUBLIC
-    render
+    system
+    graphics
 )
 
 target_compile_definitions(${TARGET_NAME} PUBLIC

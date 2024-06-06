@@ -1,32 +1,32 @@
-#ifndef __MVR_KEY_EVENT__
-#define __MVR_KEY_EVENT__
+#ifndef __TL_KEY_EVENT__
+#define __TL_KEY_EVENT__
 
-#include "system/event/MVREvent.h"
+#include "system/event/TLEvent.h"
 
 #include <sstream>
 
-MVR_NS_BEGIN
+TL_NS_BEGIN
 
-class MVRKeyEvent : public MVREvent
+class TLKeyEvent : public TLEvent
 {
 public:
-    MVRkeyEvent(int keyCode)
+    TLkeyEvent(int keyCode)
     : _keyCode(keyCode)
     {}
 
     inline int GetKeyCode() { return _keyCode; }
     
-    EVENT_CLASS_CATEGORY(MVREventCategory::INPUT | MVREventCategory::KEYBOARD)
+    EVENT_CLASS_CATEGORY(TLEventCategory::INPUT | TLEventCategory::KEYBOARD)
 
 private:
     int _keyCode;
 };
 
-class MVRKeyPressedEvent : public MVRKeyEvent
+class TLKeyPressedEvent : public TLKeyEvent
 {
 public:
-    MVRKeyPressedEvent(int keyCode, uint32 repeatCount)
-    : MVRKeyEvent(keyCode),
+    TLKeyPressedEvent(int keyCode, uint32 repeatCount)
+    : TLKeyEvent(keyCode),
       _repeatCount(repeatCount)
     {}
     
@@ -44,11 +44,11 @@ private:
     uint32 _repeatCount;
 };
 
-class MVRKeyReleasedEvent : public MVRKeyEvent
+class TLKeyReleasedEvent : public TLKeyEvent
 {
 public:
-    MVRKeyReleasedEvent(int keyCode)
-    : MVRKeyEvent(keyCode)
+    TLKeyReleasedEvent(int keyCode)
+    : TLKeyEvent(keyCode)
     {}
     
     virtual std::string ToString() const override
@@ -62,6 +62,6 @@ public:
     EVENT_CLASS_TYPE(KEY_RELEASED)
 };
 
-MVR_NS_END
+TL_NS_END
 
 #endif
