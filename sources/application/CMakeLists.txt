@@ -20,6 +20,7 @@ add_executable(${TARGET_NAME}
 
 target_link_libraries(${TARGET_NAME}
     PUBLIC
+    engine
     editor
 )
 
@@ -31,8 +32,13 @@ target_compile_definitions(${TARGET_NAME} PUBLIC
 )
 
 if(APPLE)
-    SET(CMAKE_XCODE_GENERATE_SCHEME TRUE)
-    SET_PROPERTY(TARGET application PROPERTY XCODE_SCHEME_ARGUMENTS "")
+    set(CMAKE_XCODE_GENERATE_SCHEME TRUE)
+
+    if(TL_LEAK_CHECK)
+        set_target_properties(application PROPERTIES
+            XCODE_SCHEME_ARGUMENTS "XCODE_SCHEME_GUARD_MALLOC"
+            XCODE_SCHEME_ARGUMENTS "XCODE_SCHEME_MALLOC_SCRIBBLE")
+    endif()
 endif()
 
 # Define project properties

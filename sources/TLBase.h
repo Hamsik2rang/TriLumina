@@ -61,9 +61,9 @@ typedef unsigned long uint64;
 #define BIT(x)          BIT_UINT32(x)
 
 #if defined(_WIN32)
-	#define TL_DEBUG_BREAK __debugbreak
+	#define TL_DEBUG_BREAK() __debugbreak()
 #elif defined(__APPLE__)
-	#define TL_DEBUG_BREAK __builtin_trap
+	#define TL_DEBUG_BREAK() __builtin_trap()
 #endif
 
 #ifdef _DEBUG
@@ -102,6 +102,16 @@ typedef unsigned long uint64;
 	#else
 		#define TL_EDITOR_API
 	#endif
+#endif
+
+#if defined(TL_PLATFORM_WINDOWS)
+#define TL_CHECK_MEMORY() _CrtCheckMemory()
+#define TL_ALIGN_BEGIN(size) alignas(size)
+#define TL_ALIGN_END(size)
+#else
+#define TL_CHECK_MEMORY()
+#define TL_ALIGN_BEGIN(size) 
+#define TL_ALIGN_END(size) __attribute__ ((aligned (size)))
 #endif
 
 #define TL_NS_BEGIN		namespace TL {

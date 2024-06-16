@@ -28,9 +28,8 @@ int main()
     
     TL_NEVER_HAPPEN();
 
-#ifdef TL_PROFILE_DEBUG
-    _CrtCheckMemory();
+#ifdef _DEBUG
+    TL_CHECK_MEMORY();
 #endif
-
     return 0;
 }
