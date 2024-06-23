@@ -1,7 +1,5 @@
 set(TARGET_NAME system)
 
-project(${TARGET_NAME})
-
 set(EVENT_HEADERS
     event/TLEvent.hpp
     event/TLKeyEvent.hpp

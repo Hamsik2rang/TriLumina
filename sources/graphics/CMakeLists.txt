@@ -1,7 +1,5 @@
 set(TARGET_NAME graphics)
 
-project(${TARGET_NAME})
-
 set(COMMON_HEADERS
     TLGraphicsContext.h
 )

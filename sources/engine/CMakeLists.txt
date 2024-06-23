@@ -1,7 +1,5 @@
 set(TARGET_NAME engine)
 
-project(${TARGET_NAME})
-
 add_compile_definitions(TL_ENGINE)
 
 set(COMMON_HEADERS
@@ -24,7 +22,9 @@ add_library(${TARGET_NAME}
 
 target_link_libraries(${TARGET_NAME}
     PUBLIC
+    "-Wl"
     graphics
+    "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit  -framework Metal -framework GameController"
 )
 
 target_compile_definitions(${TARGET_NAME} PUBLIC

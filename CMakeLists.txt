@@ -50,13 +50,6 @@ else()
     # set(VULKAN ${TL_DEPS_DLL_DIR}/vulkan-1.dll)
 endif()
 
-# ImGui
-if(APPLE)
-    set(IMGUI ${TL_DEPS_DLL_DIR}/libImGui.dylib)
-else()
-    # set(IMGUI ${TL_DEPS_DLL_DIR}/ImGui.dll)
-endif()
-
 if(APPLE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-invalid-offsetof -Winline-new-delete -fno-rtti")

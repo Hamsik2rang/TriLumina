@@ -1,7 +1,5 @@
 set(TARGET_NAME application)
 
-project(${TARGET_NAME})
-
 set(COMMON_HEADERS
     TLMain.h)
 
@@ -35,9 +33,11 @@ if(APPLE)
     set(CMAKE_XCODE_GENERATE_SCHEME TRUE)
 
     if(TL_LEAK_CHECK)
+        # TODO: 정상 동작 확인
         set_target_properties(application PROPERTIES
+            XCODE_SCHEME_ARGUMENTS "XCODE_SCHEME_MALLOC_SCRIBBLE"
             XCODE_SCHEME_ARGUMENTS "XCODE_SCHEME_GUARD_MALLOC"
-            XCODE_SCHEME_ARGUMENTS "XCODE_SCHEME_MALLOC_SCRIBBLE")
+        )
     endif()
 endif()
 
