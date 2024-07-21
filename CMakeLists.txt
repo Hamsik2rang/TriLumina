@@ -9,9 +9,16 @@ set(ENGINE_NAME "TriLumina")
 project(${ENGINE_NAME})
 
 set(TL_ROOT_DIR ${TriLumina_SOURCE_DIR})
+message(STATUS "TL_ROOT_DIR: ${TL_ROOT_DIR}")
+
 set(TL_BIN_DIR ${TriLumina_BINARY_DIR})
+message(STATUS "TL_BIN_DIR ${TL_BIN_DIR}")
+
 set(TL_SRC_DIR ${TL_ROOT_DIR}/sources)
+message(STATUS "TL_SRC_DIR ${TL_SRC_DIR}")
+
 set(TL_DEPS_DIR ${TL_ROOT_DIR}/dependencies)
+message(STATUS "TL_DEPS_DIR ${TL_DEPS_DIR}")
 
 if(APPLE)
     if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
@@ -45,10 +52,13 @@ set(TL_DEPS_INCLUDE_DIR ${TL_DEPS_DIR}/include)
 
 # Vulkan
 if(APPLE)
+    # dylib? static lib으로 들어가야 할 듯.
     set(VULKAN ${TL_DEPS_DLL_DIR}/libvulkan.1.dylib)
 else()
-    # set(VULKAN ${TL_DEPS_DLL_DIR}/vulkan-1.dll)
+    set(VULKAN ${TL_DEPS_LIB_DIR}/vulkan-1.lib)
 endif()
+
+message("Vulkan has found from: ${VULKAN}")
 
 if(APPLE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
@@ -65,7 +75,7 @@ if(WIN32)
 endif()
 
 include_directories(sources)
-include_directories(SYSTEM TL_DEPS_INCLUDE_DIR)
+include_directories(SYSTEM ${TL_DEPS_INCLUDE_DIR})
 
 option(TL_DEVELOPER "" OFF)
 option(TL_LEAK_CHECK "" OFF)

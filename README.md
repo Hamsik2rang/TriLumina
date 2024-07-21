@@ -1,2 +1,3 @@
 # TriLumina
-Cross-platform renderer. It supports Vulkan, Metal, and DirectX11/12
+
+Cross-platform playground-renderer. It supports Vulkan, Metal, and DirectX(11, 12)

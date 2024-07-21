@@ -3,6 +3,8 @@
 
 #include "TLBase.h"
 
+#include <string>
+
 #if defined(TL_PLATFORM_MACOS)
 #include "system/platform/cocoa/TLPlatformCocoa.h"
 #elif defined(TL_PLATFORM_WINDOWS)
@@ -11,26 +13,43 @@
 
 TL_NS_BEGIN
 
-class TLWindow;
+struct TLWindowConfig
+{
+	bool resizable;
+	bool decorated;
+	bool focused;
+	const char* title;
+};
 
-struct TLSystemConfig
+struct TLFramebufferConfig
 {
 
 };
 
-class TLSystemContext
+struct TLGraphicsConfig
 {
-public:
-    TLSystemContext();
-    
-    ~TLSystemContext();
-    
-    void SetConfig(const TLSystemConfig& config) { _config = config; }
-    TLSystemConfig GetConfig() const { return _config; }
-private:
-    TLSystemConfig _config;
-    bool _resizable;
+	const char* name;
+	uint8 major;
+	uint8 minor;
 };
+
+struct TLSystemContext
+{
+	struct
+	{
+		TLWindowConfig window;
+		TLFramebufferConfig framebuffer;
+		TLGraphicsConfig graphics;
+	} configs;
+
+	bool isInitialized;
+	bool isDebug;
+	std::string executablePath;
+	std::string executableDirectoryPath;
+
+};
+
+TLSystemContext* tl_create_system_context();
 
 TL_NS_END
 

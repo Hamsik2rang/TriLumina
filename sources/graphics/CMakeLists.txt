@@ -2,6 +2,7 @@ set(TARGET_NAME graphics)
 
 set(COMMON_HEADERS
     TLGraphicsContext.h
+    TLGraphicsDefinition.h
 )
 
 source_group("public" FILES ${COMMON_HEADERS})
@@ -12,15 +13,28 @@ set(COMMON_SOURCES
 
 source_group("private" FILES ${COMMON_SOURCES})
 
+set(PRIVATE_VULKAN
+    private/vulkan/TLGraphicsContextVK.h
+    private/vulkan/TLVulkanUtility.h
+)
+
+if(NOT IOS)
+    list(APPEND PRIVATE_VULKAN private/vulkan/TLGraphicsContextVK.cpp)
+endif()
+
+source_group("private\\vulkan" FILES ${PRIVATE_VULKAN})
+
 add_library(${TARGET_NAME}
     STATIC
     ${COMMON_HEADERS}
     ${COMMON_SOURCES}
+    ${PRIVATE_VULKAN}
 )
-
+message("Vulkan for graphics: ${VULKAN}")
 target_link_libraries(${TARGET_NAME}
     PUBLIC
     system
+    ${VULKAN}
 )
 
 target_compile_definitions(${TARGET_NAME} PUBLIC

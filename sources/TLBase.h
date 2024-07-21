@@ -42,11 +42,11 @@ typedef unsigned short uint16;
 typedef int int32;
 typedef unsigned int uint32;
 #ifdef TL_PLATFORM_WINDOWS
-typedef long long int64;
-typedef unsigned long long uint64;
+	typedef long long int64;
+	typedef unsigned long long uint64;
 #else // TL_PLATFORM_MACOS
-typedef long int64;
-typedef unsigned long uint64;
+	typedef long int64;
+	typedef unsigned long uint64;
 #endif
 
 #define BIT_INT8(x)     (static_cast<int8>(1) << (x))
@@ -105,19 +105,23 @@ typedef unsigned long uint64;
 #endif
 
 #if defined(TL_PLATFORM_WINDOWS)
-#define TL_CHECK_MEMORY() _CrtCheckMemory()
-#define TL_ALIGN_BEGIN(size) alignas(size)
-#define TL_ALIGN_END(size)
+	#define _CRTDBG_MAP_ALLOC
+	#include <crtdbg.h>
+	#define TL_CHECK_MEMORY_START() _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF)
+	#define TL_CHECK_MEMORY_END() _CrtCheckMemory()
+	#define TL_ALIGN_BEGIN(size) alignas(size)
+	#define TL_ALIGN_END(size)
 #else
-#define TL_CHECK_MEMORY()
-#define TL_ALIGN_BEGIN(size) 
-#define TL_ALIGN_END(size) __attribute__ ((aligned (size)))
+	#define TL_CHECK_MEMORY_START()
+	#define TL_CHECK_MEMORY_END()
+	#define TL_ALIGN_BEGIN(size) 
+	#define TL_ALIGN_END(size) __attribute__ ((aligned (size)))
 #endif
 
-#define TL_NS_BEGIN		namespace TL {
-#define TL_NS_GRAPHICS_BEGIN namespace TL { namespace Render {
-#define TL_NS_ENGINE_BEGIN namespace TL { namespace Engine {
-#define TL_NS_EDITOR_BEGIN namespace TL { namespace Editor {
+#define TL_NS_BEGIN				namespace TL {
+#define TL_NS_GRAPHICS_BEGIN 	namespace TL { namespace Graphics {
+#define TL_NS_ENGINE_BEGIN 		namespace TL { namespace Engine {
+#define TL_NS_EDITOR_BEGIN 		namespace TL { namespace Editor {
 
 #define TL_NS_END				}
 #define TL_NS_GRAPHICS_END		} }

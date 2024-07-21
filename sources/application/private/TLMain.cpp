@@ -8,6 +8,10 @@ using namespace TL::Editor;
 
 int main()
 {
+#ifdef TL_LEAK_CHECK
+    TL_CHECK_MEMORY_START();
+#endif
+
     TL_LOG_INFO("This is %s.", "info");
     TL_LOG_DEBUG("This is %s.", "debug");
     TL_LOG_TRACE("This is %s.", "trace");
@@ -26,11 +30,12 @@ int main()
     TL_ASSERT(sizeof(uint32) == 4, "Size of uint32 should be %d", 4);
     TL_ASSERT(sizeof(uint64) == 8, "Size of uint64 should be %d", 8);
     
-    TL_NEVER_HAPPEN();
-    
+    //TL_NEVER_HAPPEN();
 
-#ifdef _DEBUG
-    TL_CHECK_MEMORY();
+    TLEditor* editor = new TLEditor();
+
+#ifdef TL_LEAK_CHECK
+    TL_CHECK_MEMORY_END();
 #endif
     return 0;
 }

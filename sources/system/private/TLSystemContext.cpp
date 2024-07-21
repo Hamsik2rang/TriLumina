@@ -2,15 +2,12 @@
 
 TL_NS_BEGIN
 
-TLSystemContext::TLSystemContext()
-{
-    
-}
 
-TLSystemContext::~TLSystemContext()
+TLSystemContext* tl_create_system_context()
 {
-    
-}
+    TLSystemContext* systemContext = new TLSystemContext;
 
+    return systemContext;
+}
 
 TL_NS_END
