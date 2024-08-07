@@ -70,7 +70,6 @@ bool TLGraphicsContextVK::initInstance()
 		}
 	}
 
-
 	VkInstanceCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.pNext = nullptr;
@@ -84,11 +83,6 @@ bool TLGraphicsContextVK::initInstance()
 	VK_CHECK_ERROR(vkCreateInstance(&createInfo, nullptr, &_instance));
 
 
-	return true;
-}
-
-bool TLGraphicsContextVK::Load()
-{
 	return true;
 }
 
