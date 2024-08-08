@@ -63,7 +63,7 @@ message("Vulkan has found from: ${VULKAN}")
 
 if(APPLE)
 else()
-    set(SDL ${TL_DEPS_DLL_DIR}/SDL2.dll)
+    set(SDL ${TL_DEPS_LIB_DIR}/SDL2.lib ${TL_DEPS_LIB_DIR}/SDL2main.lib ${TL_DEPS_LIB_DIR}/SDL2test.lib)
 endif()
 
 if(APPLE)
@@ -78,8 +78,6 @@ set(INSTALL_FOLDER "$<TARGET_FILE_DIR:application>")
 # endif()
 include_directories(sources)
 include_directories(SYSTEM ${TL_DEPS_INCLUDE_DIR})
-
-install(FILES ${SDL} DESTINATION ${INSTALL_FOLDER})
 
 option(TL_DEVELOPER "" OFF)
 option(TL_LEAK_CHECK "" OFF)

@@ -34,6 +34,8 @@ int main()
 
     TLEditor* editor = new TLEditor();
 
+    editor->Run();
+
 #ifdef TL_LEAK_CHECK
     TL_CHECK_MEMORY_END();
 #endif

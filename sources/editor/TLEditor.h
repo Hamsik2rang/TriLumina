@@ -14,6 +14,7 @@ class TL_EDITOR_API TLEditor
 {
 public:
 	void Print(const char* msg);
+	void Run();
 
 private:
 	Engine::TLEngine _engine;

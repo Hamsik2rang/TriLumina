@@ -20,12 +20,20 @@ add_library(${TARGET_NAME}
     ${COMMON_SOURCES}
 )
 
-target_link_libraries(${TARGET_NAME}
-    PUBLIC
-    "-Wl"
-    graphics
-    "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit  -framework Metal -framework GameController"
-)
+if(APPLE)
+    target_link_libraries(${TARGET_NAME}
+        PUBLIC
+        "-Wl"
+        graphics
+        "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit  -framework Metal -framework GameController"
+    )
+else()
+    target_link_libraries(${TARGET_NAME}
+        PUBLIC
+        "-Wl"
+        graphics
+    )
+endif()
 
 target_compile_definitions(${TARGET_NAME} PUBLIC
     $<$<CONFIG:Debug>:_DEBUG>
@@ -36,7 +44,5 @@ target_compile_definitions(${TARGET_NAME} PUBLIC
 
 # Define project properties
 if(WIN32)
-    set_property(TARGET ${TARGET_NAME} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_property(TARGET ${TARGET_NAME} PROPERTY LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_property(TARGET ${TARGET_NAME} PROPERTY ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+    set_target_properties(${TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR} LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR} ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 endif()
