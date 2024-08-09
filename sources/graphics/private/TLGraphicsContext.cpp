@@ -1,10 +1,6 @@
 #include "graphics/TLGraphicsContext.h"
-
-#if defined(TL_PLATFORM_WINDOWS)
-    #include "graphics/private/vulkan/TLGraphicsContextVK.h"
-#elif defined(TL_PLATFORM_MACOS)
-    #include "graphics/private/metal/TLGraphicsContextMTL.h"
-#endif
+#include "graphics/private/vulkan/TLGraphicsContextVK.h"
+#include "graphics/private/metal/TLGraphicsContextMTL.h"
 
 TL_NS_GRAPHICS_BEGIN
 
@@ -16,14 +12,14 @@ TLIGraphicsContext* TLIGraphicsContext::Create(TLEGraphicsInterface interface)
     {
         case TLEGraphicsInterface::VULKAN:
         {
-            
-        }
+            context = new TLGraphicsContextVK();
             break;
+        }
         case TLEGraphicsInterface::METAL:
         {
             context = new TLGraphicsContextMTL();
-        }
             break;
+        }
         case TLEGraphicsInterface::NONE:
         case TLEGraphicsInterface::VIRTUAL:
         default:

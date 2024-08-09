@@ -12,18 +12,24 @@ set(COMMON_SOURCES
 )
 
 source_group("private" FILES ${COMMON_SOURCES})
+set(PRIVATE_VULKAN
+    private/vulkan/TLGraphicsContextVK.h
+    private/vulkan/TLVulkanUtility.h
+)
 
-if(NOT APPLE)
-    set(PRIVATE_VULKAN
-        private/vulkan/TLGraphicsContextVK.h
+if(WIN32)
+    list(APPEND PRIVATE_VULKAN
         private/vulkan/TLGraphicsContextVK.cpp
-        private/vulkan/TLVulkanUtility.h
-        private/vulkan/TLVulkanUtility.cpp
-    )
+        private/vulkan/TLVulkanUtility.cpp)
+endif()
 
-    source_group("private\\vulkan" FILES ${PRIVATE_VULKAN})
-else()
-    set(PRIVATE_METAL
+source_group("private\\vulkan" FILES ${PRIVATE_VULKAN})
+
+set(PRIVATE_METAL)
+
+# Vulkan의 경우 Mac에서도 헤더 인클루드가 가능하지만, Metal은 그 반대가 불가능하므로 아래처럼 작성합니다.
+if(APPLE)
+    list(APPEND PRIVATE_METAL
         private/metal/TLGraphicsContextMTL.h
         private/metal/TLGraphicsContextMTL.mm
         private/metal/TLMetalUtility.h
@@ -33,21 +39,13 @@ else()
     source_group("private\\metal" FILES ${PRIVATE_METAL})
 endif()
 
-if(APPLE)
-    add_library(${TARGET_NAME}
-        STATIC
-        ${COMMON_HEADERS}
-        ${COMMON_SOURCES}
-        ${PRIVATE_METAL}
-    )
-else()
-    add_library(${TARGET_NAME}
-        STATIC
-        ${COMMON_HEADERS}
-        ${COMMON_SOURCES}
-        ${PRIVATE_VULKAN}
-    )
-endif()
+add_library(${TARGET_NAME}
+    STATIC
+    ${COMMON_HEADERS}
+    ${COMMON_SOURCES}
+    ${PRIVATE_VULKAN}
+    ${PRIVATE_METAL}
+)
 
 target_link_libraries(${TARGET_NAME}
     PUBLIC

@@ -7,9 +7,9 @@ using namespace TL::Graphics;
 
 TL_NS_EDITOR_BEGIN
 
-void TLEditor::Print(const char* msg)
+bool TLEditor::Load()
 {
-	
+    
 }
 
 void TLEditor::Run()
