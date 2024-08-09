@@ -4,12 +4,14 @@ add_compile_definitions(TL_ENGINE)
 
 set(COMMON_HEADERS
     TLEngine.h
+    TLApplication.h
 )
 
 source_group("public" FILES ${COMMON_HEADERS})
 
 set(COMMON_SOURCES
     private/TLEngine.cpp
+    private/TLApplication.cpp
 )
 
 source_group("private" FILES ${COMMON_SOURCES})

@@ -13,23 +13,41 @@ set(COMMON_SOURCES
 
 source_group("private" FILES ${COMMON_SOURCES})
 
-set(PRIVATE_VULKAN
-    private/vulkan/TLGraphicsContextVK.h
-    private/vulkan/TLVulkanUtility.h
-)
+if(NOT APPLE)
+    set(PRIVATE_VULKAN
+        private/vulkan/TLGraphicsContextVK.h
+        private/vulkan/TLGraphicsContextVK.cpp
+        private/vulkan/TLVulkanUtility.h
+        private/vulkan/TLVulkanUtility.cpp
+    )
 
-if(NOT IOS)
-    list(APPEND PRIVATE_VULKAN private/vulkan/TLGraphicsContextVK.cpp)
+    source_group("private\\vulkan" FILES ${PRIVATE_VULKAN})
+else()
+    set(PRIVATE_METAL
+        private/metal/TLGraphicsContextMTL.h
+        private/metal/TLGraphicsContextMTL.mm
+        private/metal/TLMetalUtility.h
+        private/metal/TLMetalUtility.mm
+    )
+
+    source_group("private\\metal" FILES ${PRIVATE_METAL})
 endif()
 
-source_group("private\\vulkan" FILES ${PRIVATE_VULKAN})
-
-add_library(${TARGET_NAME}
-    STATIC
-    ${COMMON_HEADERS}
-    ${COMMON_SOURCES}
-    ${PRIVATE_VULKAN}
-)
+if(APPLE)
+    add_library(${TARGET_NAME}
+        STATIC
+        ${COMMON_HEADERS}
+        ${COMMON_SOURCES}
+        ${PRIVATE_METAL}
+    )
+else()
+    add_library(${TARGET_NAME}
+        STATIC
+        ${COMMON_HEADERS}
+        ${COMMON_SOURCES}
+        ${PRIVATE_VULKAN}
+    )
+endif()
 
 target_link_libraries(${TARGET_NAME}
     PUBLIC

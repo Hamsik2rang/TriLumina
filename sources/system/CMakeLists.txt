@@ -9,17 +9,12 @@ set(EVENT_HEADERS
 
 source_group("event\\public" FILES ${EVENT_HEADERS})
 
+set(PLATFORM_HEADERS
+    platform/TLPlatformDefinition.h
+)
+
 IF(APPLE)
-    set(PLATFORM_HEADERS
-        platform/cocoa/TLWindowCocoa.h
-        platform/cocoa/TLPlatformCocoa.h
-        platform/cocoa/TLAutoreleasePool.h
-    )
 ELSEIF(MSVC)
-    set(PLATFORM_HEADERS
-        platform/windows/TLWindowWindows.h
-        platform/windows/TLPlatformWindows.h
-    )
 ENDIF()
 
 source_group("platform\\public" FILES ${PLATFORM_HEADERS})
@@ -44,7 +39,6 @@ source_group("event\\private" FILES ${EVENT_SOURCES})
 IF(APPLE)
     set(PLATFORM_SOURCES
         private/platform/cocoa/TLPlatformCocoa.mm
-        private/platform/cocoa/TLAutoreleasePool.mm
     )
 ELSEIF(MSVC)
     set(PLATFORM_SOURCES
@@ -57,6 +51,7 @@ source_group("platform\\private" FILES ${PLATFORM_SOURCES})
 set(COMMON_SOURCES
     private/TLLog.cpp
     private/TLSystemContext.cpp
+    private/TLWindow.cpp
 )
 
 source_group("private" FILES ${COMMON_SOURCES})
@@ -75,7 +70,6 @@ add_library(${TARGET_NAME}
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${SDL})
 
-# target_link_libraries(${TARGET_NAME} PRIVATE ${SDL})
 target_compile_definitions(${TARGET_NAME} PUBLIC
     $<$<CONFIG:Debug>:_DEBUG>
     $<$<CONFIG:MinSizeRel>:_RELEASE>

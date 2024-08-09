@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19.2)
+cmake_minimum_required(VERSION 3.22.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,8 +29,20 @@ if(APPLE)
 
     message(STATUS "TL_ARCH is ${TL_ARCH}")
 
-    set(TL_DEPS_LIB_DIR ${TL_DEPS_DIR}/lib/osx/${TL_ARCH})
-    set(TL_DEPS_DLL_DIR ${TL_DEPS_DIR}/dll/osx/${TL_ARCH})
+    set(CMAKE_OSX_ARCHITECTURES $(ARCHS_STANDARD))
+
+    if(CMAKE_GENERATOR STREQUAL "Xcode")
+        set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES)
+    else()
+        set(CMAKE_OBJC_FLAGS "-fobjc-arc")
+        set(CMAKE_OBJCXX_FLAGS "-fobjc-arc")
+    endif()
+
+    # set(TL_DEPS_LIB_DIR ${TL_DEPS_DIR}/lib/osx/${TL_ARCH})
+    # set(TL_DEPS_DLL_DIR ${TL_DEPS_DIR}/dll/osx/${TL_ARCH})
+    set(TL_DEPS_LIB_DIR ${TL_DEPS_DIR}/lib/osx/)
+    set(TL_DEPS_DLL_DIR ${TL_DEPS_DIR}/dll/osx)
+
 else() # MSVC
     if("${MSVC_C_ARCHITECTURE_ID}" STREQUAL "X86")
         # set(TL_ARCH "i686")
@@ -45,8 +57,10 @@ else() # MSVC
 
     message(STATUS "TL_ARCH is ${TL_ARCH}")
 
-    set(TL_DEPS_LIB_DIR ${TL_DEPS_DIR}/lib/win/${TL_ARCH})
-    set(TL_DEPS_DLL_DIR ${TL_DEPS_DIR}/dll/win/${TL_ARCH})
+    # set(TL_DEPS_LIB_DIR ${TL_DEPS_DIR}/lib/win/${TL_ARCH})
+    # set(TL_DEPS_DLL_DIR ${TL_DEPS_DIR}/dll/win/${TL_ARCH})
+    set(TL_DEPS_LIB_DIR ${TL_DEPS_DIR}/lib/win)
+    set(TL_DEPS_DLL_DIR ${TL_DEPS_DIR}/dll/win)
 endif()
 
 set(TL_DEPS_INCLUDE_DIR ${TL_DEPS_DIR}/include)
@@ -62,8 +76,10 @@ endif()
 message("Vulkan has found from: ${VULKAN}")
 
 if(APPLE)
+    set(SDL ${TL_DEPS_DLL_DIR}/libSDL2.dylib)
 else()
-    set(SDL ${TL_DEPS_LIB_DIR}/SDL2.lib ${TL_DEPS_LIB_DIR}/SDL2main.lib ${TL_DEPS_LIB_DIR}/SDL2test.lib)
+    # set(SDL ${TL_DEPS_LIB_DIR}/SDL2.lib ${TL_DEPS_LIB_DIR}/SDL2main.lib ${TL_DEPS_LIB_DIR}/SDL2test.lib)
+    set(SDL ${TL_DEPS_LIB_DIR}/SDL2.lib)
 endif()
 
 if(APPLE)

@@ -14,8 +14,8 @@ void TLEditor::Print(const char* msg)
 
 void TLEditor::Run()
 {
-	TLIWindow* window = new TLIWindow();
-	window->Init();
+	TLIWindow* window = new TLIWindow("Test Window", 1280, 720);
+	
 	delete window;
 }
 

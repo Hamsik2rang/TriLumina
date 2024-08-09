@@ -4,6 +4,7 @@ add_compile_definitions(TL_EDITOR)
 
 set(COMMON_HEADERS
     TLEditor.h
+    TLEditorWindow.h
     TLImGuiContext.h
 )
 
@@ -12,6 +13,7 @@ source_group("public" FILES ${COMMON_HEADERS})
 set(COMMON_SOURCES
     private/TLEditor.cpp
     private/TLImGuiContext.cpp
+    private/TLEditorWindow.cpp
 )
 
 source_group("private" FILES ${COMMON_SOURCES})

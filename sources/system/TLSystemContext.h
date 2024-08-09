@@ -2,14 +2,9 @@
 #define __TL_SYSTEM_CONTEXT__
 
 #include "TLBase.h"
+#include "system/platform/TLPlatformDefinition.h"
 
 #include <string>
-
-#if defined(TL_PLATFORM_MACOS)
-#include "system/platform/cocoa/TLPlatformCocoa.h"
-#elif defined(TL_PLATFORM_WINDOWS)
-#include "system/platform/windows/TLPlatformWindows.h"
-#endif
 
 TL_NS_BEGIN
 

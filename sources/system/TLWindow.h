@@ -10,27 +10,28 @@ TL_NS_BEGIN
 class TLIWindow
 {
 public:
-    TLIWindow() = default;
-
-    void Init()
-    {
-        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
-        {
-            TL_LOG_ERROR("Error: %s\n", SDL_GetError());
-            return;
-        }
-    }
+    TLIWindow() = delete;
+    TLIWindow(const char* title, uint32 width, uint32 height);
+    
+    virtual ~TLIWindow();
     
     inline const uint32 GetWidth() const { return _width; }
     inline const uint32 GetHeight() const { return _height; }
     inline const char* GetTitle() const { return _title; }
-    inline void* GetHandle() { return _handle; }
-
-    static TLIWindow* Create();
+    virtual void* GetHandle() { return _handle; }
+    
+    virtual void OnAttach() {}
+    virtual void OnDetach() {}
+    virtual void OnEvent() {}
+    virtual void OnUpdate(float deltaTime) {}
+    virtual void OnRender() {}
+    virtual void OnGUI() {}
+    
 private:
     const char* _title;
     uint32 _width;
     uint32 _height;
+    
     void* _handle;
 };
 
