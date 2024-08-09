@@ -33,8 +33,13 @@ struct TLGraphicsConfig
 	uint8 minor;
 };
 
-struct TLSystemContext
+class TLSystemContext
 {
+public:
+	static TLSystemContext* Create();
+	static TLSystemContext* Get();
+
+private:
 	struct
 	{
 		TLWindowConfig window;
@@ -47,6 +52,7 @@ struct TLSystemContext
 	std::string executablePath;
 	std::string executableDirectoryPath;
 
+	static TLSystemContext* _instance;
 };
 
 TLSystemContext* tl_create_system_context();

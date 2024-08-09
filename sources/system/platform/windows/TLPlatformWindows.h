@@ -5,6 +5,7 @@
 
 TL_NS_BEGIN
 
+void* tl_platform_create_window();
 
 
 TL_NS_END

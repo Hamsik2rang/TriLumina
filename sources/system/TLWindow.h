@@ -24,11 +24,14 @@ public:
     inline const uint32 GetWidth() const { return _width; }
     inline const uint32 GetHeight() const { return _height; }
     inline const char* GetTitle() const { return _title; }
-    //virtual void* GetHandle() = 0;
+    inline void* GetHandle() { return _handle; }
+
+    static TLIWindow* Create();
 private:
     const char* _title;
     uint32 _width;
     uint32 _height;
+    void* _handle;
 };
 
 
