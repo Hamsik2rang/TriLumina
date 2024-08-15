@@ -7,7 +7,12 @@ TLSystemContext* TLSystemContext::s_instance;
 
 TLSystemContext* TLSystemContext::Create()
 {
-    TLSystemContext* systemContext = new TLSystemContext;
+    if (nullptr != s_instance)
+    {
+        TL_LOG_CRASH("TLSystemContext is already created!");
+        return nullptr;
+    }
+    TLSystemContext* systemContext = new TLSystemContext();
     systemContext->isInitialized = true;
 #ifdef TL_PROFILE_DEBUG
     systemContext->isDebug = true;

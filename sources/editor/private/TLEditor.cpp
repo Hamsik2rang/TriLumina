@@ -9,15 +9,23 @@ TL_NS_EDITOR_BEGIN
 
 bool TLEditor::Init()
 {
-    TLSystemContext* systemContext = TLSystemContext::Create();
-    _system = systemContext;
+    if (nullptr == TLSystemContext::Create())
+    {
+        return false;
+    }
+    _system = TLSystemContext::Get();
 #ifdef TL_PLATFORM_MACOS
     Engine::TLEngine::Create(TLEGraphicsInterface::METAL);
 #else
-    Engine::TLEngine::Create(TLEGraphicsInterface::VULKAN);
+    if (nullptr == Engine::TLEngine::Create(TLEGraphicsInterface::VULKAN))
+    {
+        return false;
+    }
 #endif
     
     _windows = new TLEditorWindow(_system, "TriLumina", 1280, 720);
+
+    return true;
 }
 
 void TLEditor::Run()
