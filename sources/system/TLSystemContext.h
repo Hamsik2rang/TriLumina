@@ -34,23 +34,24 @@ public:
 	static TLSystemContext* Create();
 	static TLSystemContext* Get();
 
+    void PollEvents();
+    struct
+    {
+        TLWindowConfig window;
+        TLFramebufferConfig framebuffer;
+        TLGraphicsConfig graphics;
+    } configs;
+
+    bool isInitialized;
+    bool isDebug;
+    bool shouldQuit = false;
+    std::string executablePath;
+    std::string executableDirectoryPath;
+
 private:
-	struct
-	{
-		TLWindowConfig window;
-		TLFramebufferConfig framebuffer;
-		TLGraphicsConfig graphics;
-	} configs;
-
-	bool isInitialized;
-	bool isDebug;
-	std::string executablePath;
-	std::string executableDirectoryPath;
-
-	static TLSystemContext* _instance;
+	static TLSystemContext* s_instance;
 };
 
-TLSystemContext* tl_create_system_context();
 
 TL_NS_END
 

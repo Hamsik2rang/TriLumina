@@ -5,18 +5,18 @@
 TL_NS_BEGIN
 
 
-TLIWindow::TLIWindow(const char* title, uint32 width, uint32 height)
-: _title { title }
-, _width { width }
+TLIWindow::TLIWindow(TLSystemContext* systemContext, const char* title, uint32 width, uint32 height)
+: _systemContext{ systemContext }
+, _title{ title }
+, _width{ width }
 , _height{ height }
-, _handle{ nullptr }
 {
-    _handle = tl_platform_window_create(title, width, height);
+    _nativeObjects = tl_platform_create_native_object(_title, _width, _height, _vSync);
 }
-
+            
 TLIWindow::~TLIWindow()
 {
-    tl_platform_window_destroy(_handle);
+    tl_platform_destroy_native_object(_nativeObjects);
 }
 
 

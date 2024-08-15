@@ -3,6 +3,7 @@ set(TARGET_NAME graphics)
 set(COMMON_HEADERS
     TLGraphicsContext.h
     TLGraphicsDefinition.h
+    TLSwapchain.h
 )
 
 source_group("public" FILES ${COMMON_HEADERS})
@@ -15,12 +16,16 @@ source_group("private" FILES ${COMMON_SOURCES})
 set(PRIVATE_VULKAN
     private/vulkan/TLGraphicsContextVK.h
     private/vulkan/TLVulkanUtility.h
+    private/vulkan/TLGraphicsDefinitionVK.h
+    private/vulkan/TLSwapchainVK.h
 )
 
 if(WIN32)
     list(APPEND PRIVATE_VULKAN
         private/vulkan/TLGraphicsContextVK.cpp
-        private/vulkan/TLVulkanUtility.cpp)
+        private/vulkan/TLVulkanUtility.cpp
+        private/vulkan/TLSwapchainVK.cpp
+    )
 endif()
 
 source_group("private\\vulkan" FILES ${PRIVATE_VULKAN})
@@ -34,6 +39,9 @@ if(APPLE)
         private/metal/TLGraphicsContextMTL.mm
         private/metal/TLMetalUtility.h
         private/metal/TLMetalUtility.mm
+        private/metal/TLGraphicsDefinitionMTL.h
+        private/metal/TLSwapchainMTL.h
+        private/metal/TLSwapchainMTL.mm
     )
 
     source_group("private\\metal" FILES ${PRIVATE_METAL})
@@ -51,6 +59,8 @@ target_link_libraries(${TARGET_NAME}
     PUBLIC
     system
     ${VULKAN}
+
+    # "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit -framework Metal -framework GameController"
 )
 
 target_compile_definitions(${TARGET_NAME} PUBLIC

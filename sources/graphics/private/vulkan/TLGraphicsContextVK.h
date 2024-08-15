@@ -15,7 +15,8 @@ public:
 
 	virtual bool Init() override;
 	virtual bool Load() override;
-
+    virtual TLISwapchain* CreateSwapchain(TLIWindow* window) override;
+    virtual void Present(TLISwapchain* swapchain);
 	virtual void Shutdown() override;
 
 private:

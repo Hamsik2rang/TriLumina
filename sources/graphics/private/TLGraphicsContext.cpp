@@ -10,16 +10,22 @@ TLIGraphicsContext* TLIGraphicsContext::Create(TLEGraphicsInterface interface)
     
     switch (interface)
     {
-        case TLEGraphicsInterface::VULKAN:
-        {
-            context = new TLGraphicsContextVK();
-            break;
-        }
+
+#ifdef TL_PLATFORM_MACOS
         case TLEGraphicsInterface::METAL:
         {
             context = new TLGraphicsContextMTL();
             break;
         }
+#else
+        case TLEGraphicsInterface::VULKAN:
+        {
+            context = new TLGraphicsContextVK();
+            break;
+        }
+        case TLEGraphicsInterface::DIRECTX_11:
+        case TLEGraphicsInterface::DIRECTX_12:
+#endif
         case TLEGraphicsInterface::NONE:
         case TLEGraphicsInterface::VIRTUAL:
         default:

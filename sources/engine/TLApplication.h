@@ -1,5 +1,7 @@
 #include "TLBase.h"
 
+#include "system/TLWindow.h"
+
 TL_NS_ENGINE_BEGIN
 
 class TL_API TLIApplication
@@ -9,8 +11,15 @@ public:
     virtual void Run() = 0;
     virtual void Shutdown() = 0;
     
-private:
-    // TLList<TLIWindow> _windows;
+protected:
+    //TODO: 추후 List 형식으로 변경.
+    TLIWindow* _windows;
+    TLSystemContext* _system;
+    TLEngine* _engine;
+    
+    //TODO: Timer 구현 필요
+    float _deltaTime;
+    
 };
 
 TL_NS_ENGINE_END

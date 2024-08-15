@@ -2,7 +2,8 @@
 #define __TL_WINDOW__
 
 #include "TLBase.h"
-#include "SDL/SDL.h"
+#include "system/TLSystemContext.h"
+#include "system/platform/TLPlatformDefinition.h"
 #include "TLLog.h"
 
 TL_NS_BEGIN
@@ -10,15 +11,17 @@ TL_NS_BEGIN
 class TLIWindow
 {
 public:
+    
     TLIWindow() = delete;
-    TLIWindow(const char* title, uint32 width, uint32 height);
+    TLIWindow(TLSystemContext* systemContext, const char* title, uint32 width, uint32 height);
     
     virtual ~TLIWindow();
     
-    inline const uint32 GetWidth() const { return _width; }
-    inline const uint32 GetHeight() const { return _height; }
+    inline uint32 GetWidth() const { return _width; }
+    inline uint32 GetHeight() const { return _height; }
     inline const char* GetTitle() const { return _title; }
-    virtual void* GetHandle() { return _handle; }
+    inline bool GetVSync() const { return _vSync; }
+    virtual const TLPlatformNativeObject& GetNativeHandle() { return _nativeObjects; }
     
     virtual void OnAttach() {}
     virtual void OnDetach() {}
@@ -27,16 +30,21 @@ public:
     virtual void OnRender() {}
     virtual void OnGUI() {}
     
-private:
+protected:
+    virtual void createSurface() = 0;
+    
+    TLSystemContext* _systemContext = nullptr;
+    
     const char* _title;
     uint32 _width;
     uint32 _height;
+    // TODO: 추후 세팅 방법 정의
+    bool _vSync = true;
+    TLPlatformNativeObject _nativeObjects;
     
-    void* _handle;
 };
 
 
 TL_NS_END
-
 
 #endif

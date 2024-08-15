@@ -65,10 +65,20 @@ add_library(${TARGET_NAME}
     ${THIRDPARTY}
 )
 
-target_link_libraries(${TARGET_NAME}
-    PRIVATE
-    engine
-)
+if(APPLE)
+    target_link_libraries(${TARGET_NAME}
+        PRIVATE
+        engine
+        "-Wl" "-force_load" ${VULKAN} "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit  -framework Metal -framework CoreAudio -framework AudioToolbox -framework AVFoundation -framework GameController"
+    )
+else()
+    target_link_libraries(${TARGET_NAME}
+        PRIVATE
+        engine
+        "-Wl"
+        ${VULKAN}
+    )
+endif()
 
 target_compile_definitions(${TARGET_NAME} PUBLIC
     $<$<CONFIG:Debug>:_DEBUG>

@@ -32,8 +32,8 @@ int main()
     
     //TL_NEVER_HAPPEN();
 
-    TLEditor* editor = new TLEditor();
-
+    TL::Engine::TLIApplication* editor = new TLEditor();
+    editor->Init();
     editor->Run();
 
 #ifdef TL_LEAK_CHECK

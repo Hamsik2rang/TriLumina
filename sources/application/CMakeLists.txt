@@ -16,10 +16,19 @@ add_executable(${TARGET_NAME}
     ${COMMON_SOURCES}
 )
 
+set(OSX_FRAMEWORK)
+
+if(APPLE)
+    list(APPEND OSX_FRAMEWORK "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit -framework Metal -framework GameController")
+    SET_TARGET_PROPERTIES(application PROPERTIES XCODE_ATTRIBUTE_INSTALL_PATH "/Applications")
+    SET_PROPERTY(TARGET application PROPERTY XCODE_SCHEME_ARGUMENTS "")
+endif()
+
 target_link_libraries(${TARGET_NAME}
     PUBLIC
     engine
     editor
+    ${OSX_FRAMEWORK}
 )
 
 target_compile_definitions(${TARGET_NAME} PUBLIC

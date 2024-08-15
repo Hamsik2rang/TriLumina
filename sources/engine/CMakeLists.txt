@@ -5,6 +5,7 @@ add_compile_definitions(TL_ENGINE)
 set(COMMON_HEADERS
     TLEngine.h
     TLApplication.h
+    TLSurface.h
 )
 
 source_group("public" FILES ${COMMON_HEADERS})
@@ -12,6 +13,7 @@ source_group("public" FILES ${COMMON_HEADERS})
 set(COMMON_SOURCES
     private/TLEngine.cpp
     private/TLApplication.cpp
+    private/TLSurface.cpp
 )
 
 source_group("private" FILES ${COMMON_SOURCES})
@@ -22,18 +24,20 @@ add_library(${TARGET_NAME}
     ${COMMON_SOURCES}
 )
 
+# TARGET_LINK_LIBRARIES(engine PRIVATE "-Wl,-all_load" system render "-Wl,-force_load" ${VULKAN} ${OPENSSL} "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit  -framework Metal -framework CoreAudio -framework AudioToolbox -framework AVFoundation")
 if(APPLE)
     target_link_libraries(${TARGET_NAME}
         PUBLIC
-        "-Wl"
         graphics
-        "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit  -framework Metal -framework GameController"
+        PRIVATE
+        ${VULKAN} "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit  -framework Metal -framework GameController -framework CoreAudio -framework AudioToolbox -framework AVFoundation"
     )
 else()
     target_link_libraries(${TARGET_NAME}
         PUBLIC
-        "-Wl"
         graphics
+        "-Wl"
+        ${VULKAN}
     )
 endif()
 

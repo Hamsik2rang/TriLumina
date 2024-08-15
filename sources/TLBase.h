@@ -35,18 +35,48 @@
 	#define TL_PROFILE_RELEASE
 #endif
 
+#ifndef _INT8
+#define _INT8
 typedef char int8;
+#endif
+#ifndef _UINT8
+#define _UINT8
 typedef unsigned char uint8;
+#endif
+#ifndef _INT16
+#define _INT16
 typedef short int16;
+#endif
+#ifndef _UINT16
+#define _UINT16
 typedef unsigned short uint16;
+#endif
+#ifndef _INT32
+#define _INT32
 typedef int int32;
+#endif
+#ifndef _UINT32
+#define _UINT32
 typedef unsigned int uint32;
+#endif
 #ifdef TL_PLATFORM_WINDOWS
+#ifndef _INT64
+#define _INT64
 	typedef long long int64;
+#endif
+#ifndef _UINT64
+#define _UINT64
 	typedef unsigned long long uint64;
+#endif
 #else // TL_PLATFORM_MACOS
+#ifndef _INT64
+#define _INT64
 	typedef long int64;
+#endif
+#ifndef _UINT64
+#define _UINT64
 	typedef unsigned long uint64;
+#endif
 #endif
 
 #define BIT_INT8(x)     (static_cast<int8>(1) << (x))

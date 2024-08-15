@@ -3,13 +3,13 @@
 
 #include "TLBase.h"
 
+#include "system/TLLog.h"
 #include "engine/TLEngine.h"
 #include "engine/TLApplication.h"
-#include "system/TLLog.h"
 
 TL_NS_EDITOR_BEGIN
 
-class TL_EDITOR_API TLEditor : public TLIApplication
+class TL_EDITOR_API TLEditor : public Engine::TLIApplication
 {
 public:
     virtual bool Init() override;
@@ -17,7 +17,6 @@ public:
     virtual void Shutdown() override;
     
 private:
-	Engine::TLEngine* _engine;
     
 };
 
