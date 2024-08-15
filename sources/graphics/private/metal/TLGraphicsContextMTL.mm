@@ -49,7 +49,7 @@ void TLGraphicsContextMTL::Present(TLISwapchain* swapchain)
         pass.colorAttachments[0].storeAction = MTLStoreActionStore;
         pass.colorAttachments[0].texture = surface.texture;
 
-        id<MTLCommandQueue> cmdQueue = (__bridge_transfer id<MTLCommandQueue>)swMTL->_cmdQueue;
+        id<MTLCommandQueue> cmdQueue = (__bridge id<MTLCommandQueue>)swMTL->_cmdQueue;
         id<MTLCommandBuffer> buffer = [cmdQueue commandBuffer];
         id<MTLRenderCommandEncoder> encoder = [buffer renderCommandEncoderWithDescriptor:pass];
         [encoder endEncoding];
