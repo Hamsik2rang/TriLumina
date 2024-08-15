@@ -17,7 +17,7 @@ bool TLEditor::Init()
     Engine::TLEngine::Create(TLEGraphicsInterface::VULKAN);
 #endif
     
-    _windows = new TLEditorWindow(_system, "Test Window", 1280, 720);
+    _windows = new TLEditorWindow(_system, "TriLumina", 1280, 720);
 }
 
 void TLEditor::Run()
