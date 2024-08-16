@@ -20,12 +20,14 @@ public:
 	virtual void Shutdown() override;
 
 private:
-	bool initInstance();
+	bool createInstance();
+	bool createDevice();
 
 
 	VkInstance _instance;
 	VkPhysicalDevice _physicalDevice;
 	VkDevice _logicalDevice;
+	VkQueue _queue;
 
 };
 

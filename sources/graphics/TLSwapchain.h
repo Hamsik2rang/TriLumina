@@ -11,6 +11,7 @@ class TLISwapchain
 public:
     TLISwapchain() = delete;
     TLISwapchain(TLIWindow* window) : _window{ window } {}
+    virtual ~TLISwapchain() { _window = nullptr; }
     
     TLIWindow* GetWindow() { return _window; }
     
