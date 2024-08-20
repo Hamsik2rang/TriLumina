@@ -2,10 +2,22 @@
 #include "editor/TLEditorWindow.h"
 #include "graphics/TLGraphicsContext.h"
 
-using namespace TL;
-using namespace TL::Graphics;
 
 TL_NS_EDITOR_BEGIN
+
+using namespace TL::Engine;
+using namespace TL::Graphics;
+
+TLEditor::TLEditor()
+    : Engine::TLIApplication()
+{
+
+}
+
+TLEditor::~TLEditor()
+{
+
+}
 
 bool TLEditor::Init()
 {
@@ -22,8 +34,12 @@ bool TLEditor::Init()
         return false;
     }
 #endif
-    
+    TLIGraphicsContext* gContext = TLEngine::Get()->GetGraphicsContext();
+    gContext->Load();
+    gContext->Init();
+
     _windows = new TLEditorWindow(_system, "TriLumina", 1280, 720);
+    
 
     return true;
 }

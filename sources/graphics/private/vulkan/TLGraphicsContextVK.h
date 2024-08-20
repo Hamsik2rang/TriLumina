@@ -2,7 +2,9 @@
 #define __TL_GRAPHICS_CONTEXT_VK__
 
 #include "graphics/TLGraphicsContext.h"
-
+#if defined(TL_PLATFORM_WINDOWS)
+	#define VK_USE_PLATFORM_WIN32_KHR
+#endif
 #include <vulkan/vulkan.h>
 
 TL_NS_GRAPHICS_BEGIN

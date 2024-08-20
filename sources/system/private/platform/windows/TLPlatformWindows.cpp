@@ -3,6 +3,7 @@
 #include "system/TLSystemContext.h"
 
 #include "SDL/SDL.h"
+#include "SDL/SDL_vulkan.h"
 
 #include <vector>
 
@@ -32,7 +33,7 @@ TLPlatformNativeObject tl_platform_create_native_object(const char* title, uint3
     // Windows의 경우 renderer, layer가 필요하지 않음.
     handle._renderer = nullptr;
     handle._layer = nullptr;
-    
+
     return handle;
 }
 
@@ -55,6 +56,25 @@ void tl_platform_poll_events()
         case SDL_QUIT: systemContext->shouldQuit = true; break;
         }
     }
+}
+
+void tl_platform_get_window_size(const TLPlatformNativeObject& handle, uint32& width, uint32& height)
+{
+    int w, h;
+    SDL_GetWindowSize(static_cast<SDL_Window*>(handle._window), &w, &h);
+
+    width = w;
+    height = h;
+}
+
+void tl_platform_set_window_size(const TLPlatformNativeObject& handle, uint32 width, uint32 height)
+{
+    SDL_SetWindowSize(static_cast<SDL_Window*>(handle._window), static_cast<int>(width), static_cast<int>(height));
+}
+
+bool tl_platform_create_surface_vulkan(const TLPlatformNativeObject& handle, VkInstance instanceVK, VkSurfaceKHR* surfaceVK)
+{
+    return static_cast<bool>(SDL_Vulkan_CreateSurface(static_cast<SDL_Window*>(handle._window), instanceVK, surfaceVK));
 }
 
 

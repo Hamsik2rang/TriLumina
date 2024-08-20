@@ -9,12 +9,17 @@
 
 TL_NS_EDITOR_BEGIN
 
+class TL_API TL::Engine::TLIApplication;
+
 class TL_EDITOR_API TLEditor : public Engine::TLIApplication
 {
 public:
-    virtual bool Init() override;
-    virtual void Run() override;
-    virtual void Shutdown() override;
+    TLEditor();
+    virtual ~TLEditor();
+
+    virtual bool Init() final;
+    virtual void Run() final;
+    virtual void Shutdown() final;
     
 private:
     

@@ -17,7 +17,8 @@ public:
     ~TLSwapchainVK();
     
 private:
-    VkSwapchainKHR _vkSwapchain;
+    VkSurfaceKHR _surfaceVK;
+    VkSwapchainKHR _swapchainVK;
 };
 
 TL_NS_GRAPHICS_END

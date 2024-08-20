@@ -1,7 +1,5 @@
 set(TARGET_NAME editor)
 
-add_compile_definitions(TL_EDITOR)
-
 set(COMMON_HEADERS
     TLEditor.h
     TLEditorWindow.h
@@ -85,6 +83,7 @@ target_compile_definitions(${TARGET_NAME} PUBLIC
     $<$<CONFIG:MinSizeRel>:_RELEASE>
     $<$<CONFIG:Release>:_RELEASE>
     $<$<CONFIG:RelWithDebInfo>:_RELWITHDEBINFO>
+    TL_EDITOR
 )
 
 # Define project properties

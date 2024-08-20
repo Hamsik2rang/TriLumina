@@ -7,6 +7,33 @@
 
 TL_NS_GRAPHICS_BEGIN
 
+
+#ifdef TL_PROFILE_DEBUG
+static const std::vector<const char*> validationLayers
+{
+	"VK_LAYER_KHRONOS_validation"
+};
+
+static const bool enable_validation_layers = true;
+#else
+static const bool enable_validation_layers = false;
+
+#endif
+
+bool tl_vk_check_validation_layer_support()
+{
+	uint32 layerCount;
+	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+	std::vector<VkLayerProperties> availableLayers(layerCount);
+	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+	for (const char* layerName : validationLayers)
+	{
+		bool layerFound = false;
+	}
+}
+
 TLGraphicsContextVK::TLGraphicsContextVK()
 {
 
@@ -34,16 +61,28 @@ bool TLGraphicsContextVK::Load()
 
 TLISwapchain* TLGraphicsContextVK::CreateSwapchain(TLIWindow* window)
 {
-	TLISwapchain* swapchain = new TLSwapchainVK(window);
+	TLSwapchainVK* swapchainVK = new TLSwapchainVK(window);
 
-	return swapchain;
+	VkSurfaceKHR surface = nullptr;
+
+	bool result = tl_platform_create_surface_vulkan(window->GetNativeHandle(), _instance, &surface);
+	
+	if (false == result)
+	{
+		TL_LOG_CRASH("Cannot Create VkSurface");
+		return nullptr;
+	}
+
+	return static_cast<TLISwapchain*>(swapchainVK);
 }
 
 void TLGraphicsContextVK::Present(TLISwapchain* swapchain)
 {
-	
-}
+	TLSwapchainVK* swapchainVK = static_cast<TLSwapchainVK*>(swapchain);
 
+	
+	//...
+}
 
 bool TLGraphicsContextVK::createInstance()
 {
@@ -95,9 +134,9 @@ bool TLGraphicsContextVK::createInstance()
 	createInfo.pNext = nullptr;
 	createInfo.flags = 0;
 	createInfo.pApplicationInfo = &appInfo;
-	createInfo.enabledLayerCount = layerCount;
+	createInfo.enabledLayerCount = enabledLayerNames.size();
 	createInfo.ppEnabledLayerNames = enabledLayerNames.data();
-	createInfo.enabledExtensionCount = extensionCount;
+	createInfo.enabledExtensionCount = enabledExtensionNames.size();
 	createInfo.ppEnabledExtensionNames = enabledExtensionNames.data();
 
 	VK_CHECK_ERROR(vkCreateInstance(&createInfo, nullptr, &_instance));
@@ -181,13 +220,14 @@ bool TLGraphicsContextVK::createDevice()
 	VK_CHECK_ERROR(vkCreateDevice(_physicalDevice, &deviceCreateInfo, nullptr, &_logicalDevice));
 
 	vkGetDeviceQueue(_logicalDevice, queueFamilyIndex, 0, &_queue);
-
+	
+	
 	return true;
 }
 
 void TLGraphicsContextVK::Shutdown()
 {
-	//Not implemented;
+	//Not implemented yet;
 }
 
 TL_NS_GRAPHICS_END
