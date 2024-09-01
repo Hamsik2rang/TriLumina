@@ -23,11 +23,14 @@ public:
 	VkInstance instanceVK;
 	VkDevice deviceVK;
 
-	std::vector<VkSemaphore> imageAcquireSemaphores;
+	std::vector<VkSemaphore> presentCompleteSemaphores;
 	std::vector<VkSemaphore> renderCompleteSemaphores;
 	std::vector<VkFence> fences;
 
+	uint32 imageIndex = 0;
 	uint32 submitIndex = 0;
+
+	static const uint32 MAX_SUBMIT_INDEX;
 };
 
 TL_NS_GRAPHICS_END

@@ -35,15 +35,15 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL tl_vk_debug_callback
 {
 	if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
 	{
-		TL_LOG_CRASH("[Vulkan Validation Layer] ID: %s, Number: %d, Message: %s", pCallbackData->pMessageIdName, pCallbackData->messageIdNumber, pCallbackData->pMessage);
+		TL_LOG_CRASH("[Vulkan Validation Layer] [ID: %s] [Number: %d] Message: %s", pCallbackData->pMessageIdName, pCallbackData->messageIdNumber, pCallbackData->pMessage);
 	}
 	else if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 	{
-		TL_LOG_WARNING("[Vulkan Validation Layer] ID: %s, Number: %d, Message: %s", pCallbackData->pMessageIdName, pCallbackData->messageIdNumber, pCallbackData->pMessage);
+		TL_LOG_WARNING("[Vulkan Validation Layer] [ID: %s] [Number: %d] Message: %s", pCallbackData->pMessageIdName, pCallbackData->messageIdNumber, pCallbackData->pMessage);
 	}
 	else 
 	{
-		TL_LOG_DEBUG("[Vulkan Validation Layer] ID: %s, Number: %d, Message: %s", pCallbackData->pMessageIdName, pCallbackData->messageIdNumber, pCallbackData->pMessage);
+		TL_LOG_DEBUG("[Vulkan Validation Layer] [ID: %s] [Number: %d] Message: %s", pCallbackData->pMessageIdName, pCallbackData->messageIdNumber, pCallbackData->pMessage);
 	}
 
 	return VK_FALSE;
@@ -132,22 +132,21 @@ void TLGraphicsContextVK::Present(TLISwapchain* swapchain)
 {
 	TLSwapchainVK* sw = static_cast<TLSwapchainVK*>(swapchain);
 
-	uint32 imageIndex = 0;
+	sw->submitIndex = (sw->submitIndex + 1) % TLSwapchainVK::MAX_SUBMIT_INDEX;
+
 	if (VK_SUCCESS != vkGetFenceStatus(_logicalDevice, sw->fences[sw->submitIndex]))
 	{
 		vkWaitForFences(_logicalDevice, 1, &sw->fences[sw->submitIndex], VK_TRUE, UINT64_MAX);
 	}
 	VK_CHECK_RESULT(vkResetFences(_logicalDevice, 1, &sw->fences[sw->submitIndex]));
 
-	VK_CHECK_RESULT(vkAcquireNextImageKHR(_logicalDevice, sw->swapchainVK, UINT64_MAX, sw->imageAcquireSemaphores[sw->submitIndex], VK_NULL_HANDLE, &imageIndex));
-
-	sw->submitIndex = imageIndex;
+	VK_CHECK_RESULT(vkAcquireNextImageKHR(_logicalDevice, sw->swapchainVK, UINT64_MAX, sw->presentCompleteSemaphores[sw->submitIndex], VK_NULL_HANDLE, &sw->imageIndex));
 
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-	VK_CHECK_RESULT(vkBeginCommandBuffer(_tempCommandBuffer[imageIndex], &beginInfo));
+	VK_CHECK_RESULT(vkBeginCommandBuffer(_tempCommandBuffer[sw->submitIndex], &beginInfo));
 
 	VkImageSubresourceRange range{};
 	range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -156,20 +155,59 @@ void TLGraphicsContextVK::Present(TLISwapchain* swapchain)
 	range.baseMipLevel = 0;
 	range.levelCount = 1;
 
-	VkImageMemoryBarrier swBarrier{};
-	swBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-	swBarrier.srcAccessMask = 0;
-	swBarrier.dstAccessMask = 0;
-	swBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	swBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-	swBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-	swBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-	swBarrier.image = sw->swapchainImages[imageIndex];
-	swBarrier.subresourceRange = range;
+	VkImageMemoryBarrier swClearBarrier{};
+	swClearBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	swClearBarrier.srcAccessMask = VK_ACCESS_NONE;
+	swClearBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	swClearBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	swClearBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+	swClearBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	swClearBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	swClearBarrier.image = sw->swapchainImages[sw->imageIndex];
+	swClearBarrier.subresourceRange = range;
 
 	vkCmdPipelineBarrier(
-		_tempCommandBuffer[imageIndex],
+		_tempCommandBuffer[sw->submitIndex],
 		VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+		VK_PIPELINE_STAGE_TRANSFER_BIT,
+		0,
+		0,
+		nullptr,
+		0,
+		nullptr,
+		1,
+		&swClearBarrier
+	);
+
+	static float r = 0.0f;
+	static float g = 0.0f;
+	static float b = 0.0f;
+	r += 0.03f;
+	g += 0.02f;
+	b += 0.01f;
+
+	if (r > 1.0f) r = 0.0f;
+	if (g > 1.0f) g = 0.0f;
+	if (b > 1.0f) b = 0.0f;
+
+	VkClearColorValue clearColorValue = { r, g, b, 1.0f };
+	
+	vkCmdClearColorImage(_tempCommandBuffer[sw->submitIndex], sw->swapchainImages[sw->imageIndex], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &clearColorValue, 1, &range);
+
+	VkImageMemoryBarrier swPresentBarrier{};
+	swPresentBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	swPresentBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	swPresentBarrier.dstAccessMask = VK_ACCESS_NONE;
+	swPresentBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	swPresentBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	swPresentBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	swPresentBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	swPresentBarrier.image = sw->swapchainImages[sw->imageIndex];
+	swPresentBarrier.subresourceRange = range;
+
+	vkCmdPipelineBarrier(
+		_tempCommandBuffer[sw->submitIndex],
+		VK_PIPELINE_STAGE_TRANSFER_BIT,
 		VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
 		0,
 		0,
@@ -177,30 +215,31 @@ void TLGraphicsContextVK::Present(TLISwapchain* swapchain)
 		0,
 		nullptr,
 		1,
-		&swBarrier
+		&swPresentBarrier
 	);
 
-	VK_CHECK_RESULT(vkEndCommandBuffer(_tempCommandBuffer[imageIndex]));
+
+	VK_CHECK_RESULT(vkEndCommandBuffer(_tempCommandBuffer[sw->submitIndex]));
 
 	VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitInfo.pWaitDstStageMask = &waitStageMask;
-	submitInfo.pCommandBuffers = &_tempCommandBuffer[imageIndex];
+	submitInfo.pCommandBuffers = &_tempCommandBuffer[sw->submitIndex];
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pWaitSemaphores = &sw->imageAcquireSemaphores[sw->submitIndex];
+	submitInfo.pWaitSemaphores = &sw->presentCompleteSemaphores[sw->submitIndex];
 	submitInfo.waitSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = &sw->renderCompleteSemaphores[sw->submitIndex];
 	submitInfo.signalSemaphoreCount = 1;
 
-	VK_CHECK_RESULT(vkQueueSubmit(_queue, 1, &submitInfo, sw->fences[imageIndex]));
+	VK_CHECK_RESULT(vkQueueSubmit(_queue, 1, &submitInfo, sw->fences[sw->submitIndex]));
 
 	VkPresentInfoKHR presentInfo{};
 	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 	presentInfo.pSwapchains = &sw->swapchainVK;
 	presentInfo.swapchainCount = 1;
-	presentInfo.pImageIndices = &imageIndex;
+	presentInfo.pImageIndices = &sw->imageIndex;
 	presentInfo.pWaitSemaphores = &sw->renderCompleteSemaphores[sw->submitIndex];
 	presentInfo.waitSemaphoreCount = 1;
 
