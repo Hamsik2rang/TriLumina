@@ -20,6 +20,8 @@ public:
 	virtual bool Init() = 0;
 	virtual bool Load() = 0;
     virtual TLISwapchain* CreateSwapchain(TLIWindow* window) = 0;
+	virtual uint32 AcquireNextImageIndex(TLISwapchain* swapchain) = 0;
+	virtual uint32 GetCurrentImageIndex(TLISwapchain* swapchain) = 0;
     virtual void Present(TLISwapchain* swapchain) = 0;
 	virtual void Shutdown() = 0;
 

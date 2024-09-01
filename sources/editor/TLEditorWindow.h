@@ -1,3 +1,6 @@
+#ifndef __TL_EDITOR_WINDOW__
+#define __TL_EDITOR__WINDOW__
+
 #include "TLBase.h"
 
 
@@ -39,3 +42,4 @@ private:
 
 
 TL_NS_EDITOR_END
+#endif

@@ -15,10 +15,10 @@ public:
     
     inline void SetSwapchain(Graphics::TLISwapchain* swapchain) { _swapchain = swapchain; }
     inline Graphics::TLISwapchain* GetSwapchain() { return _swapchain; }
+
     
 private:
     Graphics::TLISwapchain* _swapchain;
-    
 };
 
 

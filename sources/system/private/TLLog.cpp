@@ -1,5 +1,5 @@
-#include "TLBase.h"
 #include "system/TLLog.h"
+
 #include <cstdio>
 
 #include <cstdio>
@@ -55,7 +55,7 @@ void TLLog::Log(const char* file, const uint32 line, const LogType type, const c
 	{
     case LogType::LOG_INFO:
 	{
-		start = log_color_white;
+		start = log_color_green;
 		tag = log_tag_info;
 		break;
 	}
@@ -95,9 +95,9 @@ void TLLog::Log(const char* file, const uint32 line, const LogType type, const c
 		tag = log_tag_assert;
 		break;
 	}
-	default:	// Invalid Type
+	default: // Invalid Type
 	{
-		start = log_color_green;
+		start = log_color_white;
 		tag = log_tag_invalid;
 		break;
 	}

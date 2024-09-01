@@ -15,21 +15,29 @@ public:
 	TLGraphicsContextVK();
 	~TLGraphicsContextVK();
 
-	virtual bool Init() override;
-	virtual bool Load() override;
-    virtual TLISwapchain* CreateSwapchain(TLIWindow* window) override;
-    virtual void Present(TLISwapchain* swapchain);
-	virtual void Shutdown() override;
+	virtual bool Load() final;
+	virtual bool Init() final;
+    virtual TLISwapchain* CreateSwapchain(TLIWindow* window) final;
+	virtual uint32 AcquireNextImageIndex(TLISwapchain* swapchain) final;
+	virtual uint32 GetCurrentImageIndex(TLISwapchain* swapchaon) final;
+    virtual void Present(TLISwapchain* swapchain) final;
+	virtual void Shutdown() final;
 
 private:
 	bool createInstance();
 	bool createDevice();
+	void setupDebugMessenger();
+
 
 
 	VkInstance _instance;
 	VkPhysicalDevice _physicalDevice;
 	VkDevice _logicalDevice;
 	VkQueue _queue;
+
+	// TODO: 별도 객체로 분리될 것.
+	VkCommandPool _tempCommandPool;
+	VkCommandBuffer _tempCommandBuffer[3];
 
 };
 

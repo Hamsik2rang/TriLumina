@@ -1,3 +1,6 @@
+#ifndef __TL_APPLICATION__
+#define __TL_APPLICATION__
+
 #include "TLBase.h"
 
 #include "system/TLWindow.h"
@@ -31,3 +34,4 @@ protected:
 };
 
 TL_NS_ENGINE_END
+#endif

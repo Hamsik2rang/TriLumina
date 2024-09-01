@@ -12,13 +12,22 @@ TL_NS_GRAPHICS_BEGIN
 class TLSwapchainVK : public TLISwapchain
 {
 public:
-    TLSwapchainVK() = delete;
-    TLSwapchainVK(TLIWindow* window);
-    ~TLSwapchainVK();
-    
-private:
-    VkSurfaceKHR _surfaceVK;
-    VkSwapchainKHR _swapchainVK;
+	TLSwapchainVK() = delete;
+	TLSwapchainVK(TLIWindow* window, VkInstance instance, VkDevice deviceVK);
+	virtual ~TLSwapchainVK();
+
+	VkSurfaceKHR surfaceVK;
+	std::vector<VkImage> swapchainImages;
+	VkSwapchainKHR swapchainVK;
+
+	VkInstance instanceVK;
+	VkDevice deviceVK;
+
+	std::vector<VkSemaphore> imageAcquireSemaphores;
+	std::vector<VkSemaphore> renderCompleteSemaphores;
+	std::vector<VkFence> fences;
+
+	uint32 submitIndex = 0;
 };
 
 TL_NS_GRAPHICS_END

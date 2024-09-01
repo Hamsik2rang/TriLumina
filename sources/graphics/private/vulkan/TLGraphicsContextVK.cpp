@@ -9,16 +9,45 @@ TL_NS_GRAPHICS_BEGIN
 
 
 #ifdef TL_PROFILE_DEBUG
-static const std::vector<const char*> validationLayers
+static const std::vector<const char*> validation_layers
 {
 	"VK_LAYER_KHRONOS_validation"
 };
 
 static const bool enable_validation_layers = true;
+static VkDebugUtilsMessengerEXT debug_messenger;
+static PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
+static PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
+
 #else
 static const bool enable_validation_layers = false;
 
 #endif
+
+
+static VKAPI_ATTR VkBool32 VKAPI_CALL tl_vk_debug_callback
+(
+	VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+	VkDebugUtilsMessageTypeFlagsEXT messageType,
+	const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+	void* pUserData
+)
+{
+	if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+	{
+		TL_LOG_CRASH("[Vulkan Validation Layer] ID: %s, Number: %d, Message: %s", pCallbackData->pMessageIdName, pCallbackData->messageIdNumber, pCallbackData->pMessage);
+	}
+	else if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+	{
+		TL_LOG_WARNING("[Vulkan Validation Layer] ID: %s, Number: %d, Message: %s", pCallbackData->pMessageIdName, pCallbackData->messageIdNumber, pCallbackData->pMessage);
+	}
+	else 
+	{
+		TL_LOG_DEBUG("[Vulkan Validation Layer] ID: %s, Number: %d, Message: %s", pCallbackData->pMessageIdName, pCallbackData->messageIdNumber, pCallbackData->pMessage);
+	}
+
+	return VK_FALSE;
+}
 
 bool tl_vk_check_validation_layer_support()
 {
@@ -28,10 +57,17 @@ bool tl_vk_check_validation_layer_support()
 	std::vector<VkLayerProperties> availableLayers(layerCount);
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
-	for (const char* layerName : validationLayers)
+	for (const char* layerName : validation_layers)
 	{
 		bool layerFound = false;
+
+		for (const VkLayerProperties& layerProps : availableLayers)
+		{
+			// ...
+		}
 	}
+
+	return false;
 }
 
 TLGraphicsContextVK::TLGraphicsContextVK()
@@ -46,41 +82,132 @@ TLGraphicsContextVK::~TLGraphicsContextVK()
 
 bool TLGraphicsContextVK::Init()
 {
-	createInstance();
-	createDevice();
-
 	//TODO: 로직 작성 완료 후 true 리턴하도록 변경.
 	return false;
 }
 
 bool TLGraphicsContextVK::Load()
 {
-	//TODO: 로직 작성 완료 후 true 리턴하도록 변경.
-	return false;
+	createInstance();
+	if (enable_validation_layers)
+	{
+		vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(_instance, "vkCreateDebugUtilsMessengerEXT");
+		if (nullptr == vkCreateDebugUtilsMessengerEXT)
+		{
+			return false;
+		}
+		vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(_instance, "vkDestroyDebugUtilsMessengerEXT");
+		if (nullptr == vkDestroyDebugUtilsMessengerEXT)
+		{
+			return false;
+		}
+	}
+
+	//TODO: 필요한 함수 로드 추가할 것...
+	setupDebugMessenger();
+	createDevice();
+
+	return true;
 }
 
 TLISwapchain* TLGraphicsContextVK::CreateSwapchain(TLIWindow* window)
 {
-	TLSwapchainVK* swapchainVK = new TLSwapchainVK(window);
+	TLSwapchainVK* swapchainVK = new TLSwapchainVK(window, _instance, _logicalDevice);
 
-	VkSurfaceKHR surface = nullptr;
-
-	bool result = tl_platform_create_surface_vulkan(window->GetNativeHandle(), _instance, &surface);
-	
-	if (false == result)
-	{
-		TL_LOG_CRASH("Cannot Create VkSurface");
-		return nullptr;
-	}
 
 	return static_cast<TLISwapchain*>(swapchainVK);
 }
 
+uint32 TLGraphicsContextVK::AcquireNextImageIndex(TLISwapchain* swapchain)
+{
+	return 0;
+}
+
+uint32 TLGraphicsContextVK::GetCurrentImageIndex(TLISwapchain* swapchain)
+{
+	return 0;
+}
+
 void TLGraphicsContextVK::Present(TLISwapchain* swapchain)
 {
-	TLSwapchainVK* swapchainVK = static_cast<TLSwapchainVK*>(swapchain);
+	TLSwapchainVK* sw = static_cast<TLSwapchainVK*>(swapchain);
 
-	
+	uint32 imageIndex = 0;
+	if (VK_SUCCESS != vkGetFenceStatus(_logicalDevice, sw->fences[sw->submitIndex]))
+	{
+		vkWaitForFences(_logicalDevice, 1, &sw->fences[sw->submitIndex], VK_TRUE, UINT64_MAX);
+	}
+	VK_CHECK_RESULT(vkResetFences(_logicalDevice, 1, &sw->fences[sw->submitIndex]));
+
+	VK_CHECK_RESULT(vkAcquireNextImageKHR(_logicalDevice, sw->swapchainVK, UINT64_MAX, sw->imageAcquireSemaphores[sw->submitIndex], VK_NULL_HANDLE, &imageIndex));
+
+	sw->submitIndex = imageIndex;
+
+	VkCommandBufferBeginInfo beginInfo{};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+	VK_CHECK_RESULT(vkBeginCommandBuffer(_tempCommandBuffer[imageIndex], &beginInfo));
+
+	VkImageSubresourceRange range{};
+	range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	range.baseArrayLayer = 0;
+	range.layerCount = 1;
+	range.baseMipLevel = 0;
+	range.levelCount = 1;
+
+	VkImageMemoryBarrier swBarrier{};
+	swBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	swBarrier.srcAccessMask = 0;
+	swBarrier.dstAccessMask = 0;
+	swBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	swBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	swBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	swBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	swBarrier.image = sw->swapchainImages[imageIndex];
+	swBarrier.subresourceRange = range;
+
+	vkCmdPipelineBarrier(
+		_tempCommandBuffer[imageIndex],
+		VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+		VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+		0,
+		0,
+		nullptr,
+		0,
+		nullptr,
+		1,
+		&swBarrier
+	);
+
+	VK_CHECK_RESULT(vkEndCommandBuffer(_tempCommandBuffer[imageIndex]));
+
+	VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+
+	VkSubmitInfo submitInfo{};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submitInfo.pWaitDstStageMask = &waitStageMask;
+	submitInfo.pCommandBuffers = &_tempCommandBuffer[imageIndex];
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pWaitSemaphores = &sw->imageAcquireSemaphores[sw->submitIndex];
+	submitInfo.waitSemaphoreCount = 1;
+	submitInfo.pSignalSemaphores = &sw->renderCompleteSemaphores[sw->submitIndex];
+	submitInfo.signalSemaphoreCount = 1;
+
+	VK_CHECK_RESULT(vkQueueSubmit(_queue, 1, &submitInfo, sw->fences[imageIndex]));
+
+	VkPresentInfoKHR presentInfo{};
+	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+	presentInfo.pSwapchains = &sw->swapchainVK;
+	presentInfo.swapchainCount = 1;
+	presentInfo.pImageIndices = &imageIndex;
+	presentInfo.pWaitSemaphores = &sw->renderCompleteSemaphores[sw->submitIndex];
+	presentInfo.waitSemaphoreCount = 1;
+
+	VK_CHECK_RESULT(vkQueuePresentKHR(_queue, &presentInfo));
+
+	//VK_CHECK_RESULT(vkQueueWaitIdle(_queue));
+
 	//...
 }
 
@@ -96,50 +223,80 @@ bool TLGraphicsContextVK::createInstance()
 	appInfo.apiVersion = VK_MAKE_API_VERSION(0, 1, 3, 0);
 
 	uint32 layerCount;
-	VK_CHECK_ERROR(vkEnumerateInstanceLayerProperties(&layerCount, nullptr));
+	VK_CHECK_RESULT(vkEnumerateInstanceLayerProperties(&layerCount, nullptr));
 
 	std::vector<VkLayerProperties> layerProps(layerCount);
-	VK_CHECK_ERROR(vkEnumerateInstanceLayerProperties(&layerCount, layerProps.data()));
+	VK_CHECK_RESULT(vkEnumerateInstanceLayerProperties(&layerCount, layerProps.data()));
 
 	std::vector<const char*> enabledLayerNames;
-	for (int i = 0; i < layerCount; i++)
+
+	// TODO: 필요한 instance layer만 추가해야 한다.. 어떻게?
+	//for (int i = 0; i < layerCount; i++)
+	//{
+	//	enabledLayerNames.push_back(layerProps[i].layerName);
+	//}
+	//
+
+	// Validatoin Layer 추가
+	if (enable_validation_layers)
 	{
-		enabledLayerNames.push_back(layerProps[i].layerName);
+		enabledLayerNames.push_back(validation_layers[0]);
 	}
 
 	uint32 extensionCount;
-	VK_CHECK_ERROR(vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr));
-	
+	VK_CHECK_RESULT(vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr));
+
 	std::vector<VkExtensionProperties> extensionProps(extensionCount);
-	VK_CHECK_ERROR(vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensionProps.data()));
+	VK_CHECK_RESULT(vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensionProps.data()));
 
 	std::vector<const char*> supportedExtensionNames;
 	for (int i = 0; i < extensionCount; i++)
 	{
 		supportedExtensionNames.push_back(extensionProps[i].extensionName);
 	}
-	
+
 	std::vector<const char*> enabledExtensionNames;
 	for (const char* extension : supportedExtensionNames)
 	{
-		if (std::string("VK_KHR_Surface") == std::string(extension) ||
+		if (std::string("VK_KHR_surface") == std::string(extension) ||
 			std::string("VK_KHR_win32_surface") == std::string(extension))
 		{
 			enabledExtensionNames.push_back(extension);
 		}
 	}
+	if (enable_validation_layers)
+	{
+		enabledExtensionNames.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+	}
 
 	VkInstanceCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.pNext = nullptr;
+	if (enable_validation_layers)
+	{
+		VkDebugUtilsMessengerCreateInfoEXT debugMessengerCreateInfo{};
+		debugMessengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+		debugMessengerCreateInfo.messageSeverity = 
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | 
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | 
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+		debugMessengerCreateInfo.messageType = 
+			VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | 
+			VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | 
+			VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+		debugMessengerCreateInfo.pfnUserCallback = tl_vk_debug_callback;
+
+		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugMessengerCreateInfo;
+
+	}
 	createInfo.flags = 0;
 	createInfo.pApplicationInfo = &appInfo;
-	createInfo.enabledLayerCount = enabledLayerNames.size();
-	createInfo.ppEnabledLayerNames = enabledLayerNames.data();
+	createInfo.enabledLayerCount = validation_layers.size();
+	createInfo.ppEnabledLayerNames = validation_layers.data();
 	createInfo.enabledExtensionCount = enabledExtensionNames.size();
 	createInfo.ppEnabledExtensionNames = enabledExtensionNames.data();
 
-	VK_CHECK_ERROR(vkCreateInstance(&createInfo, nullptr, &_instance));
+	VK_CHECK_RESULT(vkCreateInstance(&createInfo, nullptr, &_instance));
 
 	return true;
 }
@@ -150,10 +307,10 @@ bool TLGraphicsContextVK::createDevice()
 	TL_CHECK(_instance != nullptr, "VkInstance isn't created yet.");
 
 	uint32 physicalDeviceCount = 0;
-	VK_CHECK_ERROR(vkEnumeratePhysicalDevices(_instance, &physicalDeviceCount, nullptr));
+	VK_CHECK_RESULT(vkEnumeratePhysicalDevices(_instance, &physicalDeviceCount, nullptr));
 
 	std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
-	VK_CHECK_ERROR(vkEnumeratePhysicalDevices(_instance, &physicalDeviceCount, physicalDevices.data()));
+	VK_CHECK_RESULT(vkEnumeratePhysicalDevices(_instance, &physicalDeviceCount, physicalDevices.data()));
 
 	_physicalDevice = physicalDevices[0];
 
@@ -194,10 +351,10 @@ bool TLGraphicsContextVK::createDevice()
 	deviceQueueCreateInfo.pQueuePriorities = &priority;
 
 	uint32 deviceExtensionCount;
-	VK_CHECK_ERROR(vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &deviceExtensionCount, nullptr));
+	VK_CHECK_RESULT(vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &deviceExtensionCount, nullptr));
 
 	std::vector<VkExtensionProperties> deviceExtensionProps(deviceExtensionCount);
-	VK_CHECK_ERROR(vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &deviceExtensionCount, deviceExtensionProps.data()));
+	VK_CHECK_RESULT(vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &deviceExtensionCount, deviceExtensionProps.data()));
 
 	std::vector<const char*> deviceExtensionNames;
 	for (const VkExtensionProperties& extensionProps : deviceExtensionProps)
@@ -217,17 +374,58 @@ bool TLGraphicsContextVK::createDevice()
 	deviceCreateInfo.enabledExtensionCount = static_cast<uint32>(deviceExtensionNames.size());
 	deviceCreateInfo.ppEnabledExtensionNames = deviceExtensionNames.data();
 
-	VK_CHECK_ERROR(vkCreateDevice(_physicalDevice, &deviceCreateInfo, nullptr, &_logicalDevice));
+	VK_CHECK_RESULT(vkCreateDevice(_physicalDevice, &deviceCreateInfo, nullptr, &_logicalDevice));
 
 	vkGetDeviceQueue(_logicalDevice, queueFamilyIndex, 0, &_queue);
-	
-	
+
+	// TODO: 별도 객체로 분리될 예정.
+	VkCommandPoolCreateInfo poolInfo{};
+	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	poolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+	poolInfo.queueFamilyIndex = queueFamilyIndex;
+
+	VK_CHECK_RESULT(vkCreateCommandPool(_logicalDevice, &poolInfo, nullptr, &_tempCommandPool));
+
+	VkCommandBufferAllocateInfo bufferInfo{};
+	bufferInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	bufferInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	bufferInfo.commandPool = _tempCommandPool;
+	bufferInfo.commandBufferCount = 3; // minImageCount만큼
+
+	VK_CHECK_RESULT(vkAllocateCommandBuffers(_logicalDevice, &bufferInfo, _tempCommandBuffer));
+
 	return true;
 }
 
+void TLGraphicsContextVK::setupDebugMessenger()
+{
+	if (false == enable_validation_layers)
+	{
+		return;
+	}
+
+	VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+	createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+	createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+	createInfo.pfnUserCallback = tl_vk_debug_callback;
+	createInfo.pUserData = nullptr;
+
+	VK_CHECK_RESULT(vkCreateDebugUtilsMessengerEXT(_instance, &createInfo, nullptr, &debug_messenger));
+}
+
+
 void TLGraphicsContextVK::Shutdown()
 {
-	//Not implemented yet;
+	vkDestroyDevice(_logicalDevice, nullptr);
+
+	//...
+
+	if (nullptr != debug_messenger)
+	{
+		//vkDestroyDebugUtilsMessengerEXT(_instance, debug_messenger, nullptr);
+	}
+	vkDestroyInstance(_instance, nullptr);
 }
 
 TL_NS_GRAPHICS_END
