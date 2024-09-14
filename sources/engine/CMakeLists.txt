@@ -10,6 +10,35 @@ set(COMMON_HEADERS
 
 source_group("public" FILES ${COMMON_HEADERS})
 
+set(RENDERER_HEADERS 
+    renderer/TLRenderer.h
+    renderer/TLForwardRenderer.h
+)
+
+source_group("renderer\\public" FILES ${RENDERER_HEADERS})
+
+set(RENDERER_SOURCES
+    private/renderer/TLRenderer.cpp
+    private/renderer/TLForwardRenderer.cpp
+)
+
+source_group("renderer\\private" FILES ${RENDERER_SOURCES})
+
+set(RENDERPASS_HEADERS
+    renderer/renderpass/TLRenderPass.h
+    renderer/renderpass/TLForwardRenderPass.h
+)
+
+source_group("renderer\\public\\renderpass" FILES ${RENDERPASS_HEADERS})
+
+set(RENDERPASS_SOURCES
+    private/renderer/renderpass/TLRenderPass.cpp
+    private/renderer/renderpass/TLForwardRenderPass.cpp
+)
+
+source_group("renderer\\private\\renderpass" FILES ${RENDERPASS_SOURCES})
+
+
 set(COMMON_SOURCES
     private/TLEngineContext.cpp
     private/TLApplication.cpp
@@ -22,6 +51,10 @@ add_library(${TARGET_NAME}
     SHARED
     ${COMMON_HEADERS}
     ${COMMON_SOURCES}
+    ${RENDERER_HEADERS}
+    ${RENDERER_SOURCES}
+    ${RENDERPASS_HEADERS}
+    ${RENDERPASS_SOURCES}
 )
 
 # TARGET_LINK_LIBRARIES(engine PRIVATE "-Wl,-all_load" system render "-Wl,-force_load" ${VULKAN} ${OPENSSL} "-framework OpenGL -framework Foundation -framework CoreFoundation -framework QuartzCore -framework AppKit -framework IOKit  -framework Metal -framework CoreAudio -framework AudioToolbox -framework AVFoundation")
