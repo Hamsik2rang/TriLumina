@@ -1,12 +1,12 @@
 #include "graphics/TLGraphicsContext.h"
 #include "graphics/private/vulkan/TLGraphicsContextVK.h"
-#include "graphics/private/metal/TLGraphicsContextMTL.h"
+#include "graphics/private/metal/GraphicsContextMTL.h"
 
 TL_NS_GRAPHICS_BEGIN
 
-TLIGraphicsContext* TLIGraphicsContext::Create(TLEGraphicsInterface interface)
+GraphicsContext* GraphicsContext::Create(GraphicsInterface interface)
 {
-    TLIGraphicsContext* context = nullptr;
+    GraphicsContext* context = nullptr;
     
     switch (interface)
     {
@@ -14,20 +14,20 @@ TLIGraphicsContext* TLIGraphicsContext::Create(TLEGraphicsInterface interface)
 #ifdef TL_PLATFORM_MACOS
         case TLEGraphicsInterface::METAL:
         {
-            context = new TLGraphicsContextMTL();
+            context = new GraphicsContextMTL();
             break;
         }
 #else
-        case TLEGraphicsInterface::VULKAN:
+        case GraphicsInterface::VULKAN:
         {
-            context = new TLGraphicsContextVK();
+            context = new GraphicsContextVK();
             break;
         }
-        case TLEGraphicsInterface::DIRECTX_11:
-        case TLEGraphicsInterface::DIRECTX_12:
+        case GraphicsInterface::DIRECTX_11:
+        case GraphicsInterface::DIRECTX_12:
 #endif
-        case TLEGraphicsInterface::NONE:
-        case TLEGraphicsInterface::VIRTUAL:
+        case GraphicsInterface::NONE:
+        case GraphicsInterface::VIRTUAL:
         default:
         {
             TL_LOG_ERROR("this Graphics Interface is not supported yet.");

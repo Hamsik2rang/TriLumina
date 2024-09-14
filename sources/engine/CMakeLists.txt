@@ -3,7 +3,7 @@ set(TARGET_NAME engine)
 add_compile_definitions(TL_ENGINE)
 
 set(COMMON_HEADERS
-    TLEngine.h
+    TLEngineContext.h
     TLApplication.h
     TLSurface.h
 )
@@ -11,7 +11,7 @@ set(COMMON_HEADERS
 source_group("public" FILES ${COMMON_HEADERS})
 
 set(COMMON_SOURCES
-    private/TLEngine.cpp
+    private/TLEngineContext.cpp
     private/TLApplication.cpp
     private/TLSurface.cpp
 )

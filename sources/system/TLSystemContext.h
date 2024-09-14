@@ -8,7 +8,7 @@
 
 TL_NS_BEGIN
 
-struct TLWindowConfig
+struct WindowConfig
 {
 	bool resizable;
 	bool decorated;
@@ -16,30 +16,30 @@ struct TLWindowConfig
 	const char* title;
 };
 
-struct TLFramebufferConfig
+struct FramebufferConfig
 {
 
 };
 
-struct TLGraphicsConfig
+struct GraphicsConfig
 {
 	const char* name;
 	uint8 major;
 	uint8 minor;
 };
 
-class TLSystemContext
+class SystemContext
 {
 public:
-	static TLSystemContext* Create();
-	static TLSystemContext* Get();
+	static SystemContext* Create();
+	static SystemContext* Get();
 
     void PollEvents();
     struct
     {
-        TLWindowConfig window;
-        TLFramebufferConfig framebuffer;
-        TLGraphicsConfig graphics;
+        WindowConfig window;
+        FramebufferConfig framebuffer;
+        GraphicsConfig graphics;
     } configs;
 
     bool isInitialized;
@@ -49,7 +49,7 @@ public:
     std::string executableDirectoryPath;
 
 private:
-	static TLSystemContext* s_instance;
+	static SystemContext* s_instance;
 };
 
 

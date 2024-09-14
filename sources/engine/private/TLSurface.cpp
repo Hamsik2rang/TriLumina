@@ -2,13 +2,13 @@
 
 TL_NS_ENGINE_BEGIN
 
-TLSurface::TLSurface()
+Surface::Surface()
 : _swapchain(nullptr)
 {
     
 }
 
-TLSurface::~TLSurface()
+Surface::~Surface()
 {
     
 }

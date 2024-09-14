@@ -9,9 +9,9 @@
 
 TL_NS_BEGIN
 
-TLPlatformNativeObject tl_platform_create_native_object(const char* title, uint32 width, uint32 height, bool vSync)
+PlatformNativeObject tl_platform_create_native_object(const char* title, uint32 width, uint32 height, bool vSync)
 {
-    TLPlatformNativeObject handle{};
+    PlatformNativeObject handle{};
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER))
     {
@@ -37,7 +37,7 @@ TLPlatformNativeObject tl_platform_create_native_object(const char* title, uint3
     return handle;
 }
 
-void tl_platform_destroy_native_object(TLPlatformNativeObject& handle)
+void tl_platform_destroy_native_object(PlatformNativeObject& handle)
 {
     SDL_Window* window = static_cast<SDL_Window*>(handle._window);
     SDL_DestroyWindow(window);
@@ -46,7 +46,7 @@ void tl_platform_destroy_native_object(TLPlatformNativeObject& handle)
 
 void tl_platform_poll_events()
 {
-    TLSystemContext* systemContext = TLSystemContext::Get();
+    SystemContext* systemContext = SystemContext::Get();
 
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0)
@@ -58,7 +58,7 @@ void tl_platform_poll_events()
     }
 }
 
-void tl_platform_get_window_size(const TLPlatformNativeObject& handle, uint32& width, uint32& height)
+void tl_platform_get_window_size(const PlatformNativeObject& handle, uint32& width, uint32& height)
 {
     int w, h;
     SDL_GetWindowSize(static_cast<SDL_Window*>(handle._window), &w, &h);
@@ -67,12 +67,12 @@ void tl_platform_get_window_size(const TLPlatformNativeObject& handle, uint32& w
     height = h;
 }
 
-void tl_platform_set_window_size(const TLPlatformNativeObject& handle, uint32 width, uint32 height)
+void tl_platform_set_window_size(const PlatformNativeObject& handle, uint32 width, uint32 height)
 {
     SDL_SetWindowSize(static_cast<SDL_Window*>(handle._window), static_cast<int>(width), static_cast<int>(height));
 }
 
-bool tl_platform_create_surface_vulkan(const TLPlatformNativeObject& handle, VkInstance instanceVK, VkSurfaceKHR* surfaceVK)
+bool tl_platform_create_surface_vulkan(const PlatformNativeObject& handle, VkInstance instanceVK, VkSurfaceKHR* surfaceVK)
 {
     return static_cast<bool>(SDL_Vulkan_CreateSurface(static_cast<SDL_Window*>(handle._window), instanceVK, surfaceVK));
 }

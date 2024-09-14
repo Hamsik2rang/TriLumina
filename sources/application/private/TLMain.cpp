@@ -12,14 +12,12 @@ int main()
     TL_CHECK_MEMORY_START();
 #endif
 
-    TL_LOG_INFO("This is %s.", "info");
-    TL_LOG_DEBUG("This is %s.", "debug");
-    TL_LOG_TRACE("This is %s.", "trace");
-    TL_LOG_WARNING("This is %s.", "warning");
-    TL_LOG_ERROR("This is %s.", "error");
-//    TL_LOG_CRASH("This is %s.", "crash");
-
-//    TL_CHECK(false, "this is check");
+    TLOG(info, "This is %s", "info");
+    TLOG(debug, "This is %s", "debug");
+    TLOG(trace, "This is %s", "trace");
+    TLOG(warning, "This is %s", "warning");
+    TLOG(error, "This is %s", "error");
+    //TLOG(crash, "This is %s", "crash");
 
     TL_ASSERT(sizeof(int8) == 1, "Size of int8 should be %d", 1);
     TL_ASSERT(sizeof(int16) == 2, "Size of int16 should be %d", 2);
@@ -32,7 +30,7 @@ int main()
     
     //TL_NEVER_HAPPEN();
 
-    TL::Engine::TLIApplication* editor = new TLEditor();
+    TL::EngineContext::Application* editor = new TLEditor();
     editor->Init();
     editor->Run();
 

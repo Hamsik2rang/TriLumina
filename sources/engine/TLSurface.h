@@ -7,18 +7,18 @@
 
 TL_NS_ENGINE_BEGIN
 
-class TL_API TLSurface
+class TL_API Surface
 {
 public:
-    TLSurface();
-    ~TLSurface();
+    Surface();
+    ~Surface();
     
-    inline void SetSwapchain(Graphics::TLISwapchain* swapchain) { _swapchain = swapchain; }
-    inline Graphics::TLISwapchain* GetSwapchain() { return _swapchain; }
+    inline void SetSwapchain(Graphics::Swapchain* swapchain) { _swapchain = swapchain; }
+    inline Graphics::Swapchain* GetSwapchain() { return _swapchain; }
 
     
 private:
-    Graphics::TLISwapchain* _swapchain;
+    Graphics::Swapchain* _swapchain;
 };
 
 

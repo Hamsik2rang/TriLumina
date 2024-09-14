@@ -9,18 +9,18 @@
 
 TL_NS_GRAPHICS_BEGIN
 
-class TLGraphicsContextVK : public TLIGraphicsContext
+class GraphicsContextVK : public GraphicsContext
 {
 public:
-	TLGraphicsContextVK();
-	~TLGraphicsContextVK();
+	GraphicsContextVK();
+	~GraphicsContextVK();
 
 	virtual bool Load() final;
 	virtual bool Init() final;
-    virtual TLISwapchain* CreateSwapchain(TLIWindow* window) final;
-	virtual uint32 AcquireNextImageIndex(TLISwapchain* swapchain) final;
-	virtual uint32 GetCurrentImageIndex(TLISwapchain* swapchaon) final;
-    virtual void Present(TLISwapchain* swapchain) final;
+    virtual Swapchain* CreateSwapchain(Window* window) final;
+	virtual uint32 AcquireNextImageIndex(Swapchain* swapchain) final;
+	virtual uint32 GetCurrentImageIndex(Swapchain* swapchaon) final;
+    virtual void Present(Swapchain* swapchain) final;
 	virtual void Shutdown() final;
 
 private:
@@ -33,7 +33,7 @@ private:
 	VkInstance _instance;
 	VkPhysicalDevice _physicalDevice;
 	VkDevice _logicalDevice;
-	VkQueue _queue;
+	VkQueue _graphicsQueue;
 
 	// TODO: 별도 객체로 분리될 것.
 	VkCommandPool _tempCommandPool;

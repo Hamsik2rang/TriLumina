@@ -4,14 +4,14 @@
 #include "TLBase.h"
 
 #include "system/TLLog.h"
-#include "engine/TLEngine.h"
+#include "engine/TLEngineContext.h"
 #include "engine/TLApplication.h"
 
 TL_NS_EDITOR_BEGIN
 
-class TL_API TL::Engine::TLIApplication;
+class TL_API TL::EngineContext::Application;
 
-class TL_EDITOR_API TLEditor : public Engine::TLIApplication
+class TL_EDITOR_API TLEditor : public EngineContext::Application
 {
 public:
     TLEditor();

@@ -8,13 +8,13 @@
 
 TL_NS_GRAPHICS_BEGIN
 
-class TLGraphicsContextMTL : public TLIGraphicsContext
+class GraphicsContextMTL : public GraphicsContext
 {
 public:
     virtual bool Load() override;
     virtual bool Init() override;
-    virtual TLISwapchain* CreateSwapchain(TLIWindow* window) override;
-    virtual void Present(TLISwapchain* swapchain) override;
+    virtual Swapchain* CreateSwapchain(Window* window) override;
+    virtual void Present(Swapchain* swapchain) override;
     virtual void Shutdown() override;
     
 private:

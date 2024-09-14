@@ -1,16 +1,16 @@
-#include "engine/TLEngine.h"
+#include "engine/TLEngineContext.h"
 #include "editor/TLEditorWindow.h"
 #include "graphics/TLGraphicsContext.h"
 
 TL_NS_EDITOR_BEGIN
 
-TLEditorWindow::TLEditorWindow(TLSystemContext* systemContext, const char* title, uint32 width, uint32 height)
-	: TLIWindow(systemContext, title, width, height)
+TLEditorWindow::TLEditorWindow(SystemContext* systemContext, const char* title, uint32 width, uint32 height)
+	: Window(systemContext, title, width, height)
 	, _surface{ nullptr }
 	, _engine{ nullptr }
 
 {
-	_engine = Engine::TLEngine::Get();
+	_engine = EngineContext::EngineContext::Get();
 	createSurface();
 
 	_surface->SetSwapchain(_engine->GetGraphicsContext()->CreateSwapchain(this));
@@ -23,7 +23,7 @@ TLEditorWindow::~TLEditorWindow()
 
 void TLEditorWindow::createSurface()
 {
-	_surface = new Engine::TLSurface();
+	_surface = new EngineContext::Surface();
 }
 
 void TLEditorWindow::OnRender()

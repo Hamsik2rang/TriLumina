@@ -8,20 +8,20 @@
 
 TL_NS_BEGIN
 
-class TLIWindow
+class Window
 {
 public:
     
-    TLIWindow() = delete;
-    TLIWindow(TLSystemContext* systemContext, const char* title, uint32 width, uint32 height);
+    Window() = delete;
+    Window(SystemContext* systemContext, const char* title, uint32 width, uint32 height);
     
-    virtual ~TLIWindow();
+    virtual ~Window();
     
     inline uint32 GetWidth() const { return _width; }
     inline uint32 GetHeight() const { return _height; }
     inline const char* GetTitle() const { return _title; }
     inline bool GetVSync() const { return _vSync; }
-    virtual const TLPlatformNativeObject& GetNativeHandle() { return _nativeObjects; }
+    virtual const PlatformNativeObject& GetNativeHandle() { return _nativeObjects; }
     
     virtual void OnAttach() {}
     virtual void OnDetach() {}
@@ -33,14 +33,14 @@ public:
 protected:
     virtual void createSurface() = 0;
     
-    TLSystemContext* _systemContext = nullptr;
+    SystemContext* _systemContext = nullptr;
     
     const char* _title;
     uint32 _width;
     uint32 _height;
     // TODO: 추후 세팅 방법 정의
     bool _vSync = true;
-    TLPlatformNativeObject _nativeObjects;
+    PlatformNativeObject _nativeObjects;
     
 };
 

@@ -1,5 +1,5 @@
-#include "graphics/private/metal/TLGraphicsContextMTL.h"
-#include "graphics/private/metal/TLSwapchainMTL.h"
+#include "graphics/private/metal/GraphicsContextMTL.h"
+#include "graphics/private/metal/SwapchainMTL.h"
 
 #import <Metal/Metal.h>
 #import <QuartzCore/CAMetalLayer.h>
@@ -10,28 +10,28 @@ TL_NS_GRAPHICS_BEGIN
 static id<MTLDevice> s_device = nil;
 
 
-bool TLGraphicsContextMTL::Init()
+bool GraphicsContextMTL::Init()
 {
     s_device = MTLCreateSystemDefaultDevice();
 }
 
-bool TLGraphicsContextMTL::Load()
+bool GraphicsContextMTL::Load()
 {
     return false;
 }
 
-TLISwapchain* TLGraphicsContextMTL::CreateSwapchain(TLIWindow* window)
+TLISwapchain* GraphicsContextMTL::CreateSwapchain(TLIWindow* window)
 {
-    TLISwapchain* swapchain = new TLSwapchainMTL(window);
+    TLISwapchain* swapchain = new SwapchainMTL(window);
 //    swapchain->_swapchainRenderer = SDL_CreateRenderer(static_cast<SDL_Window*>(window->GetHandle()), -1, )
     
     
     return swapchain;
 }
 
-void TLGraphicsContextMTL::Present(TLISwapchain* swapchain)
+void GraphicsContextMTL::Present(TLISwapchain* swapchain)
 {
-    TLSwapchainMTL* swMTL = static_cast<TLSwapchainMTL*>(swapchain);
+    SwapchainMTL* swMTL = static_cast<SwapchainMTL*>(swapchain);
     @autoreleasepool {
         
         CAMetalLayer* layer = (__bridge CAMetalLayer*)swMTL->_metalLayer;
@@ -59,7 +59,7 @@ void TLGraphicsContextMTL::Present(TLISwapchain* swapchain)
     }
 }
 
-void TLGraphicsContextMTL::Shutdown()
+void GraphicsContextMTL::Shutdown()
 {
     return;
 }

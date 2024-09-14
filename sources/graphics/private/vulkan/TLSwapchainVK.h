@@ -9,12 +9,12 @@
 TL_NS_GRAPHICS_BEGIN
 
 
-class TLSwapchainVK : public TLISwapchain
+class SwapchainVK : public Swapchain
 {
 public:
-	TLSwapchainVK() = delete;
-	TLSwapchainVK(TLIWindow* window, VkInstance instance, VkDevice deviceVK);
-	virtual ~TLSwapchainVK();
+	SwapchainVK() = delete;
+	SwapchainVK(Window* window, VkInstance instance, VkDevice deviceVK);
+	virtual ~SwapchainVK();
 
 	VkSurfaceKHR surfaceVK;
 	std::vector<VkImage> swapchainImages;

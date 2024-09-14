@@ -35,13 +35,13 @@ set(PRIVATE_METAL)
 # Vulkan의 경우 Mac에서도 헤더 인클루드가 가능하지만, Metal은 그 반대가 불가능하므로 아래처럼 작성합니다.
 if(APPLE)
     list(APPEND PRIVATE_METAL
-        private/metal/TLGraphicsContextMTL.h
-        private/metal/TLGraphicsContextMTL.mm
+        private/metal/GraphicsContextMTL.h
+        private/metal/GraphicsContextMTL.mm
         private/metal/TLMetalUtility.h
         private/metal/TLMetalUtility.mm
         private/metal/TLGraphicsDefinitionMTL.h
-        private/metal/TLSwapchainMTL.h
-        private/metal/TLSwapchainMTL.mm
+        private/metal/SwapchainMTL.h
+        private/metal/SwapchainMTL.mm
     )
 
     source_group("private\\metal" FILES ${PRIVATE_METAL})

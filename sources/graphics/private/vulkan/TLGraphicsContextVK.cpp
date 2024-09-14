@@ -70,23 +70,23 @@ bool tl_vk_check_validation_layer_support()
 	return false;
 }
 
-TLGraphicsContextVK::TLGraphicsContextVK()
+GraphicsContextVK::GraphicsContextVK()
 {
 
 }
 
-TLGraphicsContextVK::~TLGraphicsContextVK()
+GraphicsContextVK::~GraphicsContextVK()
 {
 	Shutdown();
 }
 
-bool TLGraphicsContextVK::Init()
+bool GraphicsContextVK::Init()
 {
 	//TODO: 로직 작성 완료 후 true 리턴하도록 변경.
 	return false;
 }
 
-bool TLGraphicsContextVK::Load()
+bool GraphicsContextVK::Load()
 {
 	createInstance();
 	if (enable_validation_layers)
@@ -110,29 +110,29 @@ bool TLGraphicsContextVK::Load()
 	return true;
 }
 
-TLISwapchain* TLGraphicsContextVK::CreateSwapchain(TLIWindow* window)
+Swapchain* GraphicsContextVK::CreateSwapchain(Window* window)
 {
-	TLSwapchainVK* swapchainVK = new TLSwapchainVK(window, _instance, _logicalDevice);
+	SwapchainVK* swapchainVK = new SwapchainVK(window, _instance, _logicalDevice);
 
 
-	return static_cast<TLISwapchain*>(swapchainVK);
+	return static_cast<Swapchain*>(swapchainVK);
 }
 
-uint32 TLGraphicsContextVK::AcquireNextImageIndex(TLISwapchain* swapchain)
+uint32 GraphicsContextVK::AcquireNextImageIndex(Swapchain* swapchain)
 {
 	return 0;
 }
 
-uint32 TLGraphicsContextVK::GetCurrentImageIndex(TLISwapchain* swapchain)
+uint32 GraphicsContextVK::GetCurrentImageIndex(Swapchain* swapchain)
 {
 	return 0;
 }
 
-void TLGraphicsContextVK::Present(TLISwapchain* swapchain)
+void GraphicsContextVK::Present(Swapchain* swapchain)
 {
-	TLSwapchainVK* sw = static_cast<TLSwapchainVK*>(swapchain);
+	SwapchainVK* sw = static_cast<SwapchainVK*>(swapchain);
 
-	sw->submitIndex = (sw->submitIndex + 1) % TLSwapchainVK::MAX_SUBMIT_INDEX;
+	sw->submitIndex = (sw->submitIndex + 1) % SwapchainVK::MAX_SUBMIT_INDEX;
 
 	if (VK_SUCCESS != vkGetFenceStatus(_logicalDevice, sw->fences[sw->submitIndex]))
 	{
@@ -233,7 +233,7 @@ void TLGraphicsContextVK::Present(TLISwapchain* swapchain)
 	submitInfo.pSignalSemaphores = &sw->renderCompleteSemaphores[sw->submitIndex];
 	submitInfo.signalSemaphoreCount = 1;
 
-	VK_CHECK_RESULT(vkQueueSubmit(_queue, 1, &submitInfo, sw->fences[sw->submitIndex]));
+	VK_CHECK_RESULT(vkQueueSubmit(_graphicsQueue, 1, &submitInfo, sw->fences[sw->submitIndex]));
 
 	VkPresentInfoKHR presentInfo{};
 	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -243,14 +243,14 @@ void TLGraphicsContextVK::Present(TLISwapchain* swapchain)
 	presentInfo.pWaitSemaphores = &sw->renderCompleteSemaphores[sw->submitIndex];
 	presentInfo.waitSemaphoreCount = 1;
 
-	VK_CHECK_RESULT(vkQueuePresentKHR(_queue, &presentInfo));
+	VK_CHECK_RESULT(vkQueuePresentKHR(_graphicsQueue, &presentInfo));
 
-	//VK_CHECK_RESULT(vkQueueWaitIdle(_queue));
+	//VK_CHECK_RESULT(vkQueueWaitIdle(_graphicsQueue));
 
 	//...
 }
 
-bool TLGraphicsContextVK::createInstance()
+bool GraphicsContextVK::createInstance()
 {
 	VkApplicationInfo appInfo{};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -341,7 +341,7 @@ bool TLGraphicsContextVK::createInstance()
 }
 
 // TODO: Queue Family나 VkQueue관련 로직은 분리하는 게 좋아 보인다.
-bool TLGraphicsContextVK::createDevice()
+bool GraphicsContextVK::createDevice()
 {
 	TL_CHECK(_instance != nullptr, "VkInstance isn't created yet.");
 
@@ -415,7 +415,7 @@ bool TLGraphicsContextVK::createDevice()
 
 	VK_CHECK_RESULT(vkCreateDevice(_physicalDevice, &deviceCreateInfo, nullptr, &_logicalDevice));
 
-	vkGetDeviceQueue(_logicalDevice, queueFamilyIndex, 0, &_queue);
+	vkGetDeviceQueue(_logicalDevice, queueFamilyIndex, 0, &_graphicsQueue);
 
 	// TODO: 별도 객체로 분리될 예정.
 	VkCommandPoolCreateInfo poolInfo{};
@@ -436,7 +436,7 @@ bool TLGraphicsContextVK::createDevice()
 	return true;
 }
 
-void TLGraphicsContextVK::setupDebugMessenger()
+void GraphicsContextVK::setupDebugMessenger()
 {
 	if (false == enable_validation_layers)
 	{
@@ -454,7 +454,7 @@ void TLGraphicsContextVK::setupDebugMessenger()
 }
 
 
-void TLGraphicsContextVK::Shutdown()
+void GraphicsContextVK::Shutdown()
 {
 	vkDestroyDevice(_logicalDevice, nullptr);
 

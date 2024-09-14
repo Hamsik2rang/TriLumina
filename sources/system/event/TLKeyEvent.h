@@ -7,30 +7,30 @@
 
 TL_NS_BEGIN
 
-class TLKeyEvent : public TLEvent
+class KeyEvent : public Event
 {
 public:
-    TLkeyEvent(int keyCode)
+    KeyEvent(int keyCode)
     : _keyCode(keyCode)
     {}
 
     inline int GetKeyCode() { return _keyCode; }
     
-    EVENT_CLASS_CATEGORY(TLEventCategory::INPUT | TLEventCategory::KEYBOARD)
+    EVENT_CLASS_CATEGORY(EventCategory::INPUT | EventCategory::KEYBOARD)
 
-private:
+protected:
     int _keyCode;
 };
 
-class TLKeyPressedEvent : public TLKeyEvent
+class KeyPressedEvent : public KeyEvent
 {
 public:
-    TLKeyPressedEvent(int keyCode, uint32 repeatCount)
-    : TLKeyEvent(keyCode),
-      _repeatCount(repeatCount)
+    KeyPressedEvent(int keyCode, uint32 repeatCount)
+        : KeyEvent(keyCode)
+        , _repeatCount(repeatCount)
     {}
     
-    inlie int GetRepeatCount() { return _repeatCount; }
+    inline int GetRepeatCount() { return _repeatCount; }
     virtual std::string ToString() const override
     {
         std::stringstream ss;
@@ -44,11 +44,11 @@ private:
     uint32 _repeatCount;
 };
 
-class TLKeyReleasedEvent : public TLKeyEvent
+class KeyReleasedEvent : public KeyEvent
 {
 public:
-    TLKeyReleasedEvent(int keyCode)
-    : TLKeyEvent(keyCode)
+    KeyReleasedEvent(int keyCode)
+    : KeyEvent(keyCode)
     {}
     
     virtual std::string ToString() const override

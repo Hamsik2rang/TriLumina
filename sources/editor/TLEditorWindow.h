@@ -6,15 +6,15 @@
 
 #include "system/TLWindow.h"
 #include "engine/TLSurface.h"
-#include "engine/TLEngine.h"
+#include "engine/TLEngineContext.h"
 
 TL_NS_EDITOR_BEGIN
 
-class TL_EDITOR_API TLEditorWindow : public TLIWindow
+class TL_EDITOR_API TLEditorWindow : public Window
 {
 public:
     TLEditorWindow() = delete;
-    TLEditorWindow(TLSystemContext* systemContext, const char* title, uint32 width, uint32 height);
+    TLEditorWindow(SystemContext* systemContext, const char* title, uint32 width, uint32 height);
     
     virtual ~TLEditorWindow();
     
@@ -22,7 +22,7 @@ public:
     inline uint32 GetHeight() const { return _height; }
     inline const char* GetTitle() const { return _title; }
     inline bool GetVSync() const { return _vSync; }
-    virtual const TLPlatformNativeObject& GetNativeHandle() { return _nativeObjects; }
+    virtual const PlatformNativeObject& GetNativeHandle() { return _nativeObjects; }
     
     // FOR TEST
 //    virtual void OnAttach() override;
@@ -36,8 +36,8 @@ protected:
     virtual void createSurface() override;
     
 private:
-    Engine::TLSurface* _surface;
-    Engine::TLEngine* _engine;
+    EngineContext::Surface* _surface;
+    EngineContext::EngineContext* _engine;
 };
 
 

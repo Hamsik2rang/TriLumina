@@ -11,21 +11,21 @@
 
 TL_NS_GRAPHICS_BEGIN
 
-class TLIGraphicsContext
+class GraphicsContext
 {
 public:
-	TLIGraphicsContext() = default;
-	virtual ~TLIGraphicsContext() = default;
+	GraphicsContext() = default;
+	virtual ~GraphicsContext() = default;
 
 	virtual bool Init() = 0;
 	virtual bool Load() = 0;
-    virtual TLISwapchain* CreateSwapchain(TLIWindow* window) = 0;
-	virtual uint32 AcquireNextImageIndex(TLISwapchain* swapchain) = 0;
-	virtual uint32 GetCurrentImageIndex(TLISwapchain* swapchain) = 0;
-    virtual void Present(TLISwapchain* swapchain) = 0;
+    virtual Swapchain* CreateSwapchain(Window* window) = 0;
+	virtual uint32 AcquireNextImageIndex(Swapchain* swapchain) = 0;
+	virtual uint32 GetCurrentImageIndex(Swapchain* swapchain) = 0;
+    virtual void Present(Swapchain* swapchain) = 0;
 	virtual void Shutdown() = 0;
 
-    static TLIGraphicsContext* Create(TLEGraphicsInterface interface);
+    static GraphicsContext* Create(GraphicsInterface interface);
 };
 
 

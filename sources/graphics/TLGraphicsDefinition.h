@@ -6,7 +6,7 @@
 
 TL_NS_GRAPHICS_BEGIN
 
-enum class TLEGraphicsInterface
+enum class GraphicsInterface
 {
     NONE = 0,
     VULKAN = 1,
@@ -16,7 +16,7 @@ enum class TLEGraphicsInterface
     VIRTUAL = 5,
 };
 
-enum class TLEPixelFormat : uint8
+enum class PixelFormat : uint8
 {
     NONE = 0,
     R8G8B8A8_UNORM = 37,

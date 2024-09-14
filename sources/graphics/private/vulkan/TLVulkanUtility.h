@@ -10,7 +10,7 @@
 TL_NS_GRAPHICS_BEGIN
 
 #ifdef TL_PROFILE_DEBUG
-#define VK_CHECK_RESULT(vkFunc)                                                          \
+#define VK_CHECK_RESULT(vkFunc)                                                         \
     do                                                                                  \
     {                                                                                   \
         if (VkResult result = vkFunc; result != VK_SUCCESS)                             \
@@ -19,7 +19,7 @@ TL_NS_GRAPHICS_BEGIN
         }                                                                               \
     } while (0)
 #else
-#define VK_CHECK_RESULT(vkFunction)                                                  \
+#define VK_CHECK_RESULT(vkFunction)                                                     \
         do                                                                              \
         {                                                                               \
             vkFunction                                                                  \

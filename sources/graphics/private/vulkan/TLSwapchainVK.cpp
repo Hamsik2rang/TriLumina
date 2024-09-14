@@ -4,10 +4,10 @@
 TL_NS_GRAPHICS_BEGIN
 
 // TODO: 정확히 타겟 디바이스에 맞게 세팅해주어야 함.
-const uint32 TLSwapchainVK::MAX_SUBMIT_INDEX = 3;
+const uint32 SwapchainVK::MAX_SUBMIT_INDEX = 3;
 
-TLSwapchainVK::TLSwapchainVK(TLIWindow* window, VkInstance instanceVK, VkDevice deviceVK)
-	: TLISwapchain(window)
+SwapchainVK::SwapchainVK(Window* window, VkInstance instanceVK, VkDevice deviceVK)
+	: Swapchain(window)
 	, instanceVK{ instanceVK }
 	, deviceVK{ deviceVK }
 	, swapchainVK{ VK_NULL_HANDLE }
@@ -70,7 +70,7 @@ TLSwapchainVK::TLSwapchainVK(TLIWindow* window, VkInstance instanceVK, VkDevice 
 	}
 }
 
-TLSwapchainVK::~TLSwapchainVK()
+SwapchainVK::~SwapchainVK()
 {
 	vkDestroySwapchainKHR(deviceVK, swapchainVK, nullptr);
 	vkDestroySurfaceKHR(instanceVK, surfaceVK, nullptr);

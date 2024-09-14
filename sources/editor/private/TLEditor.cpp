@@ -5,11 +5,11 @@
 
 TL_NS_EDITOR_BEGIN
 
-using namespace TL::Engine;
+using namespace TL::EngineContext;
 using namespace TL::Graphics;
 
 TLEditor::TLEditor()
-    : Engine::TLIApplication()
+    : EngineContext::Application()
 {
 
 }
@@ -21,20 +21,20 @@ TLEditor::~TLEditor()
 
 bool TLEditor::Init()
 {
-    if (nullptr == TLSystemContext::Create())
+    if (nullptr == SystemContext::Create())
     {
         return false;
     }
-    _system = TLSystemContext::Get();
+    _system = SystemContext::Get();
 #ifdef TL_PLATFORM_MACOS
-    Engine::TLEngine::Create(TLEGraphicsInterface::METAL);
+    EngineContext::EngineContext::Create(TLEGraphicsInterface::METAL);
 #else
-    if (nullptr == Engine::TLEngine::Create(TLEGraphicsInterface::VULKAN))
+    if (nullptr == EngineContext::EngineContext::Create(GraphicsInterface::VULKAN))
     {
         return false;
     }
 #endif
-    TLIGraphicsContext* gContext = TLEngine::Get()->GetGraphicsContext();
+    GraphicsContext* gContext = EngineContext::Get()->GetGraphicsContext();
     gContext->Load();
     gContext->Init();
 

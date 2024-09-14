@@ -7,16 +7,16 @@
 
 TL_NS_ENGINE_BEGIN
 
-class TL_API TLIApplication
+class TL_API Application
 {
 public:
-	TLIApplication()
+	Application()
 		: _windows{ nullptr }
 		, _system{ nullptr }
 		, _engine{ nullptr }
 	{}
 
-	virtual ~TLIApplication() {}
+	virtual ~Application() {}
 
 	virtual bool Init() = 0;
 	virtual void Run() = 0;
@@ -24,9 +24,9 @@ public:
 
 protected:
 	//TODO: 추후 List 형식으로 변경.
-	TLIWindow* _windows;
-	TLSystemContext* _system;
-	TLEngine* _engine;
+	Window* _windows;
+	SystemContext* _system;
+	EngineContext* _engine;
 
 	//TODO: Timer 구현 필요
 	float _deltaTime;

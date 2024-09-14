@@ -1,10 +1,10 @@
 set(TARGET_NAME system)
 
 set(EVENT_HEADERS
-    event/TLEvent.hpp
-    event/TLKeyEvent.hpp
-    event/TLMouseEvent.hpp
-    event/TLApplicationEvent.hpp
+    event/TLEvent.h
+    event/TLKeyEvent.h
+    event/TLMouseEvent.h
+    event/TLApplicationEvent.h
 )
 
 source_group("event\\public" FILES ${EVENT_HEADERS})

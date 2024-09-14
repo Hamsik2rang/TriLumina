@@ -6,17 +6,17 @@
 
 TL_NS_GRAPHICS_BEGIN
 
-class TLISwapchain
+class Swapchain
 {
 public:
-    TLISwapchain() = delete;
-    TLISwapchain(TLIWindow* window) : _window{ window } {}
-    virtual ~TLISwapchain() { _window = nullptr; }
+    Swapchain() = delete;
+    Swapchain(Window* window) : _window{ window } {}
+    virtual ~Swapchain() { _window = nullptr; }
     
-    TLIWindow* GetWindow() { return _window; }
+    Window* GetWindow() { return _window; }
     
 protected:
-    TLIWindow* _window = nullptr;
+    Window* _window = nullptr;
 };
 
 

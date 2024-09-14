@@ -3,16 +3,16 @@
 
 TL_NS_BEGIN
 
-TLSystemContext* TLSystemContext::s_instance;
+SystemContext* SystemContext::s_instance;
 
-TLSystemContext* TLSystemContext::Create()
+SystemContext* SystemContext::Create()
 {
     if (nullptr != s_instance)
     {
-        TL_LOG_CRASH("TLSystemContext is already created!");
+        TL_LOG_CRASH("SystemContext is already created!");
         return nullptr;
     }
-    TLSystemContext* systemContext = new TLSystemContext();
+    SystemContext* systemContext = new SystemContext();
     systemContext->isInitialized = true;
 #ifdef TL_PROFILE_DEBUG
     systemContext->isDebug = true;
@@ -26,18 +26,18 @@ TLSystemContext* TLSystemContext::Create()
     return s_instance;
 }
 
-TLSystemContext* TLSystemContext::Get()
+SystemContext* SystemContext::Get()
 {
     if (s_instance)
     {
         return s_instance;
     }
 
-    TL_LOG_CRASH("TLSystemContext doesn't create yet. you should craete first");
+    TL_LOG_CRASH("SystemContext doesn't create yet. you should craete first");
     return nullptr;
 }
 
-void TLSystemContext::PollEvents()
+void SystemContext::PollEvents()
 {
     tl_platform_poll_events();
 }

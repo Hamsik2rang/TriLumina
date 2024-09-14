@@ -10,7 +10,7 @@
 
 TL_NS_BEGIN
 
-enum class TLEventType : uint8
+enum class EventType : uint8
 {
     NONE = 0,
     
@@ -33,7 +33,7 @@ enum class TLEventType : uint8
     APP_RENDER,
 };
 
-enum class TLEventCategory
+enum EventCategory
 {
     NONE            = 0,
     APPLICATION     = BIT(0),
@@ -43,35 +43,35 @@ enum class TLEventCategory
     MOUSE_BUTTON    = BIT(4),
 };
 
-#define EVENT_CLASS_TYPE(type) static TLEventType GetStaticType() { return TLEventType::##type; } \
-                                virtual TLEventType GetEventType() const override { return GetStaticType(); } \
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; } \
+                                virtual EventType GetEventType() const override { return GetStaticType(); } \
                                 virtual const char* GetName() const override { return #type; }
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
-class TLEvent
+class Event
 {
-    friend class TLEventDispatcher;
+    friend class EventDispatcher;
 public:
-    virtual TLEventType GetEventType() const = 0;
+    virtual EventType GetEventType() const = 0;
     virtual const char* GetName() const = 0;
     virtual int GetCategoryFlags() const = 0;
     virtual std::string ToString() const { return std::string(GetName()); }
     
     inline bool IsHandled() const { return _isHandled; }
-    inline bool IsCategory(const TLEventCategory& category) const { return GetCategoryFlags() & category; }
+    inline bool IsCategory(const EventCategory& category) const { return GetCategoryFlags() & category; }
     
 protected:
     bool _isHandled;
 };
 
-class TLEventDispatcher
+class EventDispatcher
 {
     template <typename T>
     using EventFunc = std::function<bool(T&)>;
     
 public:
-    TLEventDispatcher(TLEvent& event) 
+    EventDispatcher(Event& event) 
         : _event{event}
     {}
     
@@ -89,7 +89,7 @@ public:
     }
     
 private:
-    TLEvent& _event;
+    Event& _event;
 };
 
 TL_NS_END

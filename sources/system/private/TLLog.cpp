@@ -45,7 +45,7 @@ static const char* log_tag_assert = "[ASSERT]";
 static const char* log_tag_invalid = "[??????]";
 
 
-void TLLog::Log(const char* file, const uint32 line, const LogType type, const char* fmt, ...)
+void Log::Print(const char* file, const uint32 line, const LogType type, const char* fmt, ...)
 {
 	const char* start = nullptr;
 	const char* end = log_color_reset;
@@ -110,7 +110,7 @@ void TLLog::Log(const char* file, const uint32 line, const LogType type, const c
 	va_end(ptr);
 }
 
-void TLLog::print(const char* file, const uint32 line, const char* start, const char* tag, const char* end, const char* fmt, va_list ptr)
+void Log::print(const char* file, const uint32 line, const char* start, const char* tag, const char* end, const char* fmt, va_list ptr)
 {
 	fprintf(stdout, "%s%s ", start, tag);
 	vfprintf(stdout, fmt, ptr);
