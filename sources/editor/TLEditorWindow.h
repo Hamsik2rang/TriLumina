@@ -10,13 +10,13 @@
 
 TL_NS_EDITOR_BEGIN
 
-class TL_EDITOR_API TLEditorWindow : public Window
+class TL_EDITOR_API EditorWindow : public Window
 {
 public:
-    TLEditorWindow() = delete;
-    TLEditorWindow(SystemContext* systemContext, const char* title, uint32 width, uint32 height);
+    EditorWindow() = delete;
+    EditorWindow(SystemContext* systemContext, const char* title, uint32 width, uint32 height);
     
-    virtual ~TLEditorWindow();
+    virtual ~EditorWindow();
     
     inline uint32 GetWidth() const { return _width; }
     inline uint32 GetHeight() const { return _height; }
@@ -36,8 +36,8 @@ protected:
     virtual void createSurface() override;
     
 private:
-    EngineContext::Surface* _surface;
-    EngineContext::EngineContext* _engine;
+    Engine::Surface* _surface;
+    Engine::EngineContext* _engine;
 };
 
 

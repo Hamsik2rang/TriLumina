@@ -4,29 +4,29 @@
 
 TL_NS_EDITOR_BEGIN
 
-TLEditorWindow::TLEditorWindow(SystemContext* systemContext, const char* title, uint32 width, uint32 height)
+EditorWindow::EditorWindow(SystemContext* systemContext, const char* title, uint32 width, uint32 height)
 	: Window(systemContext, title, width, height)
 	, _surface{ nullptr }
 	, _engine{ nullptr }
 
 {
-	_engine = EngineContext::EngineContext::Get();
+	_engine = Engine::EngineContext::Get();
 	createSurface();
 
 	_surface->SetSwapchain(_engine->GetGraphicsContext()->CreateSwapchain(this));
 }
 
-TLEditorWindow::~TLEditorWindow()
+EditorWindow::~EditorWindow()
 {
 	delete _surface;
 }
 
-void TLEditorWindow::createSurface()
+void EditorWindow::createSurface()
 {
-	_surface = new EngineContext::Surface();
+	_surface = new Engine::Surface();
 }
 
-void TLEditorWindow::OnRender()
+void EditorWindow::OnRender()
 {
 	_engine->GetGraphicsContext()->Present(_surface->GetSwapchain());
 }

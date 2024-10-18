@@ -10,9 +10,8 @@ TL_NS_BEGIN
 
 struct WindowConfig
 {
-	bool resizable;
-	bool decorated;
-	bool focused;
+	bool isResizable;
+	bool isFocused;
 	const char* title;
 };
 

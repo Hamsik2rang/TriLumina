@@ -30,7 +30,7 @@ int main()
     
     //TL_NEVER_HAPPEN();
 
-    TL::EngineContext::Application* editor = new TLEditor();
+    TL::Engine::Application* editor = new TL::Editor::Editor();
     editor->Init();
     editor->Run();
 

@@ -108,3 +108,9 @@ endif()
 
 add_subdirectory(dependencies)
 add_subdirectory(sources)
+
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
+
+IF(WIN32)
+	SET_PROPERTY(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT application)
+ENDIF()

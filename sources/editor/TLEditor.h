@@ -9,13 +9,13 @@
 
 TL_NS_EDITOR_BEGIN
 
-class TL_API TL::EngineContext::Application;
+class TL_API TL::Engine::Application;
 
-class TL_EDITOR_API TLEditor : public EngineContext::Application
+class TL_EDITOR_API Editor : public Engine::Application
 {
 public:
-    TLEditor();
-    virtual ~TLEditor();
+    Editor();
+    virtual ~Editor();
 
     virtual bool Init() final;
     virtual void Run() final;

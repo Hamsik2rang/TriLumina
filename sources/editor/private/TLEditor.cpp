@@ -5,21 +5,21 @@
 
 TL_NS_EDITOR_BEGIN
 
-using namespace TL::EngineContext;
+using namespace TL::Engine;
 using namespace TL::Graphics;
 
-TLEditor::TLEditor()
-    : EngineContext::Application()
+Editor::Editor()
+    : Engine::Application()
 {
 
 }
 
-TLEditor::~TLEditor()
+Editor::~Editor()
 {
 
 }
 
-bool TLEditor::Init()
+bool Editor::Init()
 {
     if (nullptr == SystemContext::Create())
     {
@@ -38,13 +38,13 @@ bool TLEditor::Init()
     gContext->Load();
     gContext->Init();
 
-    _windows = new TLEditorWindow(_system, "TriLumina", 1280, 720);
+    _windows = new EditorWindow(_system, "TriLumina", 1280, 720);
     
 
     return true;
 }
 
-void TLEditor::Run()
+void Editor::Run()
 {
     while (false == _system->shouldQuit)
     {
@@ -61,7 +61,7 @@ void TLEditor::Run()
     }
 }
 
-void TLEditor::Shutdown()
+void Editor::Shutdown()
 {
     delete _windows;
 }
