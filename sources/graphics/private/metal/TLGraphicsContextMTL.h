@@ -3,21 +3,13 @@
 
 #include "TLBase.h"
 
-#include "graphics/TLGraphicsContext.h"
 
 
 TL_NS_GRAPHICS_BEGIN
 
-class GraphicsContextMTL : public GraphicsContext
+class GraphicsContextMTL
 {
 public:
-    virtual bool Load() override;
-    virtual bool Init() override;
-    virtual Swapchain* CreateSwapchain(Window* window) override;
-    virtual uint32 AcquireNextImageIndex(Swapchain* swapchain) override;
-    virtual uint32 GetCurrentImageIndex(Swapchain* swapchain) override;
-    virtual void Present(Swapchain* swapchain) override;
-    virtual void Shutdown() override;
     
 private:
     void* _device;

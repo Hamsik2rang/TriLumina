@@ -8,24 +8,31 @@
 #include "graphics/TLGraphicsDefinition.h"
 #include "graphics/TLSwapchain.h"
 
+#if defined(TL_PLATFORM_MACOS)
+#include "graphics/private/metal/TLGraphicsContextMTL.h"
+#else
+#include "graphics/private/vulkan/TLGraphicsContextVK.h"
+#endif
 
 TL_NS_GRAPHICS_BEGIN
 
-class GraphicsContext
+#if defined(TL_PLATFORM_MACOS)
+class GraphicsContext : public GraphicsContextMTL
+#else
+class GraphicsContext : public GraphicsContextVK
+#endif
 {
 public:
 	GraphicsContext() = default;
-	virtual ~GraphicsContext() = default;
+    ~GraphicsContext() = default;
 
-	virtual bool Init() = 0;
-	virtual bool Load() = 0;
-    virtual Swapchain* CreateSwapchain(Window* window) = 0;
-	virtual uint32 AcquireNextImageIndex(Swapchain* swapchain) = 0;
-	virtual uint32 GetCurrentImageIndex(Swapchain* swapchain) = 0;
-    virtual void Present(Swapchain* swapchain) = 0;
-	virtual void Shutdown() = 0;
-
-    static GraphicsContext* Create(GraphicsInterface interface);
+	bool Init();
+	bool Load();
+    Swapchain* CreateSwapchain(Window* window);
+	uint32 AcquireNextImageIndex(Swapchain* swapchain);
+	uint32 GetCurrentImageIndex(Swapchain* swapchain);
+    void Present(Swapchain* swapchain);
+	void Shutdown();
 };
 
 
