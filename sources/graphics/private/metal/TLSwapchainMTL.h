@@ -7,11 +7,11 @@
 
 TL_NS_GRAPHICS_BEGIN
 
-class SwapchainMTL : public TLISwapchain
+class SwapchainMTL : public Swapchain
 {
 public:
     SwapchainMTL() = delete;
-    SwapchainMTL(TLIWindow* window);
+    SwapchainMTL(Window* window);
     ~SwapchainMTL();
     
     void* _metalLayer;

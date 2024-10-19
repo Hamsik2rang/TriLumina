@@ -41,7 +41,7 @@ struct LogSymbol
 TL_NS_END
 
 #define TLOG(symbol, fmt, ...)		do { \
-	TL::Log::Print(__FILE__, __LINE__, TL::LogSymbol::##symbol, fmt, ##__VA_ARGS__); \
+	TL::Log::Print(__FILE__, __LINE__, TL::LogSymbol::symbol, fmt, ##__VA_ARGS__); \
 	if ( TL::LogSymbol::symbol == TL::Log::LogType::LOG_CRASH) \
 	{ \
 	TL_DEBUG_BREAK(); \

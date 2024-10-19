@@ -9,7 +9,6 @@
 
 TL_NS_EDITOR_BEGIN
 
-class TL_API TL::Engine::Application;
 
 class TL_EDITOR_API Editor : public Engine::Application
 {

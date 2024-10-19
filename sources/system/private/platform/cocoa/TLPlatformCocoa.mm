@@ -6,9 +6,9 @@
 
 TL_NS_BEGIN
 
-TLPlatformNativeObject tl_platform_create_native_object(const char* title, uint32 width, uint32 height, bool vSync)
+PlatformNativeObject tl_platform_create_native_object(const char* title, uint32 width, uint32 height, bool vSync)
 {
-    TLPlatformNativeObject handle{};
+    PlatformNativeObject handle{};
     
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER))
     {
@@ -41,7 +41,7 @@ TLPlatformNativeObject tl_platform_create_native_object(const char* title, uint3
     return handle;
 }
 
-void tl_platform_destroy_native_object(TLPlatformNativeObject& handle)
+void tl_platform_destroy_native_object(PlatformNativeObject& handle)
 {
     SDL_Renderer* renderer = static_cast<SDL_Renderer*>(handle._renderer);
     SDL_DestroyRenderer(renderer);
@@ -53,7 +53,7 @@ void tl_platform_destroy_native_object(TLPlatformNativeObject& handle)
 
 void tl_platform_poll_events()
 {
-    TLSystemContext* systemContext = TLSystemContext::Get();
+    SystemContext* systemContext = SystemContext::Get();
     
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0)

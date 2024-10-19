@@ -1,6 +1,6 @@
 #include "graphics/TLGraphicsContext.h"
 #include "graphics/private/vulkan/TLGraphicsContextVK.h"
-#include "graphics/private/metal/GraphicsContextMTL.h"
+#include "graphics/private/metal/TLGraphicsContextMTL.h"
 
 TL_NS_GRAPHICS_BEGIN
 
@@ -12,7 +12,7 @@ GraphicsContext* GraphicsContext::Create(GraphicsInterface interface)
     {
 
 #ifdef TL_PLATFORM_MACOS
-        case TLEGraphicsInterface::METAL:
+        case GraphicsInterface::METAL:
         {
             context = new GraphicsContextMTL();
             break;

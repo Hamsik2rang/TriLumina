@@ -1,5 +1,5 @@
-#include "graphics/private/metal/GraphicsContextMTL.h"
-#include "graphics/private/metal/SwapchainMTL.h"
+#include "graphics/private/metal/TLGraphicsContextMTL.h"
+#include "graphics/private/metal/TLSwapchainMTL.h"
 
 #import <Metal/Metal.h>
 #import <QuartzCore/CAMetalLayer.h>
@@ -20,16 +20,26 @@ bool GraphicsContextMTL::Load()
     return false;
 }
 
-TLISwapchain* GraphicsContextMTL::CreateSwapchain(TLIWindow* window)
+Swapchain* GraphicsContextMTL::CreateSwapchain(Window* window)
 {
-    TLISwapchain* swapchain = new SwapchainMTL(window);
+    Swapchain* swapchain = new SwapchainMTL(window);
 //    swapchain->_swapchainRenderer = SDL_CreateRenderer(static_cast<SDL_Window*>(window->GetHandle()), -1, )
     
     
     return swapchain;
 }
 
-void GraphicsContextMTL::Present(TLISwapchain* swapchain)
+uint32 GraphicsContextMTL::AcquireNextImageIndex(Swapchain* swapchain)
+{
+    return 0;
+}
+
+uint32 GraphicsContextMTL::GetCurrentImageIndex(Swapchain* swapchain)
+{
+    return 0;
+}
+
+void GraphicsContextMTL::Present(Swapchain* swapchain)
 {
     SwapchainMTL* swMTL = static_cast<SwapchainMTL*>(swapchain);
     @autoreleasepool {

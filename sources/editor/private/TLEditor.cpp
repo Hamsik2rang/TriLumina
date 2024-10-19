@@ -27,7 +27,7 @@ bool Editor::Init()
     }
     _system = SystemContext::Get();
 #ifdef TL_PLATFORM_MACOS
-    EngineContext::EngineContext::Create(TLEGraphicsInterface::METAL);
+    EngineContext::EngineContext::Create(GraphicsInterface::METAL);
 #else
     if (nullptr == EngineContext::EngineContext::Create(GraphicsInterface::VULKAN))
     {

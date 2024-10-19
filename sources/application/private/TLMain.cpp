@@ -18,6 +18,9 @@ int main()
     TLOG(warning, "This is %s", "warning");
     TLOG(error, "This is %s", "error");
     //TLOG(crash, "This is %s", "crash");
+    
+    auto info = TL::LogSymbol::info;
+    
 
     TL_ASSERT(sizeof(int8) == 1, "Size of int8 should be %d", 1);
     TL_ASSERT(sizeof(int16) == 2, "Size of int16 should be %d", 2);

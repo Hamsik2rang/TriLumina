@@ -1,4 +1,4 @@
-#include "graphics/private/metal/SwapchainMTL.h"
+#include "graphics/private/metal/TLSwapchainMTL.h"
 #include "system/platform/TLPlatformDefinition.h"
 
 #import <Metal/Metal.h>
@@ -7,8 +7,8 @@
 TL_NS_GRAPHICS_BEGIN
 
 
-SwapchainMTL::SwapchainMTL(TLIWindow* window)
-: TLISwapchain(window)
+SwapchainMTL::SwapchainMTL(Window* window)
+: Swapchain(window)
 {
     _metalLayer = window->GetNativeHandle()._layer;
     CAMetalLayer* layer = (__bridge CAMetalLayer*)_metalLayer;
