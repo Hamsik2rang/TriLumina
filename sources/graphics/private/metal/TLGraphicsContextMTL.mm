@@ -1,4 +1,4 @@
-#include "graphics/TLGraphicsContext.h"
+#include "graphics/private/metal/TLGraphicsContextMTL.h"
 #include "graphics/private/metal/TLSwapchainMTL.h"
 
 #import <Metal/Metal.h>
@@ -10,17 +10,17 @@ TL_NS_GRAPHICS_BEGIN
 static id<MTLDevice> s_device = nil;
 
 
-bool GraphicsContext::Init()
+bool GraphicsContextMTL::Init()
 {
     s_device = MTLCreateSystemDefaultDevice();
 }
 
-bool GraphicsContext::Load()
+bool GraphicsContextMTL::Load()
 {
     return false;
 }
 
-Swapchain* GraphicsContext::CreateSwapchain(Window* window)
+Swapchain* GraphicsContextMTL::CreateSwapchain(Window* window)
 {
     Swapchain* swapchain = new SwapchainMTL(window);
 //    swapchain->_swapchainRenderer = SDL_CreateRenderer(static_cast<SDL_Window*>(window->GetHandle()), -1, )
@@ -29,17 +29,17 @@ Swapchain* GraphicsContext::CreateSwapchain(Window* window)
     return swapchain;
 }
 
-uint32 GraphicsContext::AcquireNextImageIndex(Swapchain* swapchain)
+uint32 GraphicsContextMTL::AcquireNextImageIndex(Swapchain* swapchain)
 {
     return 0;
 }
 
-uint32 GraphicsContext::GetCurrentImageIndex(Swapchain* swapchain)
+uint32 GraphicsContextMTL::GetCurrentImageIndex(Swapchain* swapchain)
 {
     return 0;
 }
 
-void GraphicsContext::Present(Swapchain* swapchain)
+void GraphicsContextMTL::Present(Swapchain* swapchain)
 {
     SwapchainMTL* swMTL = static_cast<SwapchainMTL*>(swapchain);
     @autoreleasepool {
@@ -69,7 +69,7 @@ void GraphicsContext::Present(Swapchain* swapchain)
     }
 }
 
-void GraphicsContext::Shutdown()
+void GraphicsContextMTL::Shutdown()
 {
     return;
 }

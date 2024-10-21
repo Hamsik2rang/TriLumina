@@ -34,7 +34,7 @@ EngineContext* EngineContext::Get()
 
 EngineContext::EngineContext(Graphics::GraphicsInterface graphicsInterface)
 {
-    _graphicsContext = new Graphics::GraphicsContext();
+    _graphicsContext = Graphics::GraphicsContext::Create(graphicsInterface);
 }
 
 
